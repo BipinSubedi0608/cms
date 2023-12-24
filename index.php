@@ -30,9 +30,8 @@
 
 <body>
     <?php
-    include "Components/Navbar.html";
-    for ($i = 0; $i < 5; $i++)
-        include "Components/FoodContainer.html";
+        require "Components/Navbar.html";
+        require "Pages/menu.php"
     ?>
 
 </body>
