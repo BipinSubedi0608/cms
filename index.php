@@ -27,23 +27,12 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    
     <!-- External CSS -->
     <link rel="stylesheet" href="Css/style.css">
     <link rel="stylesheet" href="Css/home.css">
 
     <title>VAC Canteen</title>
-    <script>
-        $(document).ready(function () {
-            // Handle navigation clicks
-            $('body').on('click', 'a', function (e) {
-                e.preventDefault();
-                var page = $(this).attr('href');
-
-                // Load content dynamically
-                $('#content-container').load(page);
-            });
-        });
-    </script>
 </head>
 
 <body>
