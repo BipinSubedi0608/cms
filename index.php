@@ -30,8 +30,8 @@
 
 <body>
     <?php
-        require "Components/Navbar.html";
-        require "Pages/menu.php"
+        require_once "Components/Navbar.html";
+        require_once "Pages/menu.php";
     ?>
 
 </body>
