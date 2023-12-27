@@ -1,0 +1,87 @@
+<header>
+  <nav class="flex justify-between items-center w-[92%] mx-auto">
+    <div>
+      <img class="w-20 cursor-pointer" src="https://cdn-icons-png.flaticon.com/512/5968/5968204.png" alt="..." />
+    </div>
+    <div
+      class="nav-links duration-500 md:static absolute md:min-h-fit left-0 top-[-100%] md:w-auto w-full flex flex-col items-center px-5">
+      <ul class="flex md:flex-row flex-col md:items-center md:gap-[4vw] gap-8">
+        <li>
+          <a href="/Components/Carousel.html">Home</a>
+        </li>
+        <li>
+          <a href="#">Menu</a>
+        </li>
+        <li>
+          <a href="/Components/About.html">About</a>
+        </li>
+        <!-- <li>
+            <a href="#">Settings</a>
+          </li> -->
+      </ul>
+    </div>
+
+    <div class="flex items-center gap-6">
+      <!-- <button class="bg-[#a6c1ee] text-white px-5 py-2 rounded-full hover:bg-[#87acec]">Sign in</button> -->
+
+      <!-- AvatarDropDownButton Open -->
+
+      <button id="dropdownUserAvatarButton" data-dropdown-toggle="dropdownAvatar"
+        class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+        type="button">
+        <span class="sr-only">Open user menu</span>
+        <img class="w-14 h-14 rounded-full" src="../../Images/profile.png" alt="user photo" />
+      </button>
+
+      <!-- Dropdown menu -->
+      <div id="dropdownAvatar"
+        class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-49 dark:bg-gray-700 dark:divide-gray-600">
+        <div class="px-4 py-3 text-2xl text-gray-900">
+          <div>Zenithjung Karki</div>
+        </div>
+        <ul class="py-2 text-2xl text-gray-700" aria-labelledby="dropdownUserAvatarButton">
+          <li>
+            <a href="#"
+              class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+          </li>
+          <li>
+            <a href="#"
+              class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
+          </li>
+          <li>
+            <a href="#"
+              class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
+          </li>
+        </ul>
+        <div class="py-2">
+          <a href="#"
+            class="block px-4 py-2 text-2xl text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign
+            out</a>
+        </div>
+      </div>
+
+      <!-- AvatarDropDownButton Closes -->
+
+      <ion-icon onclick="onToggleMenu(this)" name="menu" class="text-6xl cursor-pointer md:hidden"></ion-icon>
+    </div>
+  </nav>
+</header>
+
+<script>
+  const navLinks = document.querySelector(".nav-links");
+  const header = document.querySelector("header");
+
+  function onToggleMenu(e) {
+    e.name = e.name === "menu" ? "close" : "menu";
+    navLinks.classList.toggle("top-[9%]");
+
+    // Check if the menu is open
+    const isMenuOpen = navLinks.classList.contains("top-[9%]");
+
+    // Calculate the height of the menu
+    const menuHeight = isMenuOpen ? navLinks.offsetHeight : 0;
+
+    // Adjust the bottom margin of the header to create space for the menu
+    header.style.marginBottom = `${menuHeight}px`;
+  }
+</script>
