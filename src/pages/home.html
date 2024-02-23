@@ -1,4 +1,6 @@
-<!-- <script src="../../src/assets/js/loadPage.js" defer></script> -->
+<script type="module">
+  import loadPageInRootContainer from '../assets/js/loadPage.js';
+</script>
 
 <!-- Content for HomePage -->
 <div class="container align-center">
@@ -10,9 +12,11 @@
             <div class="col-md-12 col-lg-7 col-sm-12">
               <div class="detail-box text-center text-md-start">
                 <h1 class="homeHeader">Vishwa Adarsha College</h1>
-                <p class="homeDescription">Transforming college dining with our Canteen Management System: Order in a snap, pay with ease, and savor every byte of innovation. Say <span class='font-weight-bold text-danger text-3xl'>Hello</span> to a smarter, tastier campus life!</p>
+                <p class="homeDescription">Transforming college dining with our Canteen Management System: Order in a
+                  snap, pay with ease, and savor every byte of innovation. Say <span
+                    class='font-weight-bold text-danger text-3xl'>Hello</span> to a smarter, tastier campus life!</p>
                 <div class="btn-box">
-                  <button class="orderBtn btn btn-danger rounded-pill">
+                  <button onclick="loadPageInRootContainer('menu')" class="orderBtn btn btn-danger rounded-pill">
                     Order Now
                   </button>
                 </div>

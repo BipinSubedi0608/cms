@@ -1,23 +1,23 @@
 import { getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { usersCollection } from "../../index.js";
+import { usersCollection } from "../../script.js";
 
-let studentModel = {
-    std_id: undefined,
-    name: undefined,
-    grade: undefined,
-    section: undefined,
-    faculty: undefined,
+let currentStudent = {
+    std_id: "",
+    name: "",
+    grade: "",
+    section: "",
+    faculty: "",
     general_info: {
-        dob: undefined,
-        roll_no: undefined,
-        gender: undefined,
-        father_name: undefined,
-        mother_name: undefined
+        dob: "",
+        roll_no: "",
+        gender: "",
+        father_name: "",
+        mother_name: ""
     },
     credentials: {
-        phone: undefined,
-        email: undefined,
-        password: undefined
+        phone: "",
+        email: "",
+        password: ""
     }
 };
 
@@ -27,37 +27,28 @@ getDocs(usersCollection)
         snapshot.docs.forEach((user) => {
             userData.push({ id: user.id, ...user.data() });
         });
-        studentModel = userData[0];
+        currentStudent = userData[0];
     })
     .catch((err) => {
         console.log(err);
     })
 
-function mapStudentData() {
-
-    // console.log([...$(".stdName")]);
+export default function mapStudentData() {
     setTimeout(function () {
-        $(".stdName").html(studentModel.name);
-        $(".stdId").html(studentModel.std_id);
-        $(".stdFaculty").html(studentModel.faculty);
-        $(".stdGrade").html(studentModel.grade);
-        $(".stdSection").html(studentModel.section);
+        $(".stdName").html(currentStudent.name);
+        $(".stdId").html(currentStudent.std_id);
+        $(".stdFaculty").html(currentStudent.faculty);
+        $(".stdGrade").html(currentStudent.grade);
+        $(".stdSection").html(currentStudent.section);
 
-        $(".stdDob").html(studentModel.general_info.dob);
-        $(".stdRollNo").html(studentModel.general_info.roll_no);
-        $(".stdGender").html(studentModel.general_info.gender);
-        $(".stdFatherName").html(studentModel.general_info.father_name);
-        $(".stdMotherName").html(studentModel.general_info.mother_name);
+        $(".stdDob").html(currentStudent.general_info.dob);
+        $(".stdRollNo").html(currentStudent.general_info.roll_no);
+        $(".stdGender").html(currentStudent.general_info.gender);
+        $(".stdFatherName").html(currentStudent.general_info.father_name);
+        $(".stdMotherName").html(currentStudent.general_info.mother_name);
 
-        $(".stdPhone").html(studentModel.credentials.phone);
-        $(".stdPassword").html(studentModel.credentials.password);
-        $(".stdEmail").html(studentModel.credentials.email);
+        $(".stdPhone").html(currentStudent.credentials.phone);
+        $(".stdPassword").html(currentStudent.credentials.password);
+        $(".stdEmail").html(currentStudent.credentials.email);
     }, 100);
 }
-
-$(document).ready(() => {
-    $(".profileBtn").click(function (e) {
-        e.preventDefault();
-        mapStudentData();
-    })
-})

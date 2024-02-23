@@ -1,8 +1,8 @@
-import { loadContent } from "./loadPage.js";
+import loadPageInRootContainer from "./loadPage.js";
 
 let responseData = {};
 
-function loginCall(formData) {
+export function loginCall(formData) {
     $.ajax({
         url: '../../src/php/login.php',
         type: 'POST',
@@ -10,9 +10,7 @@ function loginCall(formData) {
         success: function (response) {
             console.log(response);
             responseData = response;
-            $('.loginBackgroundImage').hide();
-            $('.navbar').show();
-            loadContent('home');
+            loadPageInRootContainer('home');
         },
         error: function (error) {
             responseData = error;
@@ -24,18 +22,3 @@ function loginCall(formData) {
 export function getUserData() {
     return responseData;
 }
-
-$(document).ready(() => {
-    $('.navbar').hide();
-    $("#loginForm").submit(function (e) {
-        e.preventDefault();
-        let formData = $(this).serialize();
-        loginCall(formData);
-    });
-
-    $('.logoutBtn').click(function (e) {
-        e.preventDefault();
-        $('.navbar').hide();
-        $('.loginBackgroundImage').show();
-    });
-});

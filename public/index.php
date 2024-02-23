@@ -32,7 +32,7 @@
   <script src="../src/assets/js/menuBox.js" type="module" defer></script>
   <script src="../src/assets/js/login.js" type="module" defer></script>
 
-  <script src="../src/index.js" type="module" defer></script>
+  <script src="../src/script.js" type="module" defer></script>
 
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 
