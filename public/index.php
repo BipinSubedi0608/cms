@@ -29,7 +29,6 @@
   <!-- External Javascript -->
   <script src="../src/assets/js/profileDisplay.js" type="module" defer></script>
   <script src="../src/assets/js/loadPage.js" type="module" defer></script>
-  <script src="../src/assets/js/menuBox.js" type="module" defer></script>
   <script src="../src/assets/js/login.js" type="module" defer></script>
 
   <script src="../src/script.js" type="module" defer></script>
@@ -41,8 +40,8 @@
 
 <body>
   <?php
-  require_once "../src/pages/navbar.html";
-  require_once '../src/pages/login.html';
+  require_once "../src/pages/global/navbar.html";
+  require_once '../src/pages/global/login.html';
   ?>
   <div id="root"></div>
 </body>

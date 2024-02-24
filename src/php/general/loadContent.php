@@ -21,20 +21,18 @@ if (isset($_POST['page'])) {
     }
 </style>';
 
-
-
     switch ($page) {
         case 'home':
-            require "../pages/home.html";
+            require "../../pages/home/home.html";
             break;
         case 'about':
-            require "../pages/about.html";
+            require "../../pages/about/about.html";
             break;
         case 'menu':
-            require "../pages/menu.html";
+            require "../../pages/menu/menu.php";
             break;
         case 'profile':
-            require "../pages/profile.html";
+            require "../../pages/profile/profile.php";
             break;
         default:
             echo "<h2>Page not found</h2>";

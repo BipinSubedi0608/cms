@@ -29,7 +29,7 @@ function loadBackground($page)
         if ($background) {
             $background .= '';
         }
-        $background .= 'background-image: url("../../src/assets/images/' . $bgImage . '");';
+        $background .= 'background-image: url("../../../src/assets/images/' . $bgImage . '");';
         $background .= 'background-size: cover;';
     }
 

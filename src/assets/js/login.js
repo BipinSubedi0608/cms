@@ -4,11 +4,10 @@ let responseData = {};
 
 export function loginCall(formData) {
     $.ajax({
-        url: '../../src/php/login.php',
+        url: '../../src/php/general/login.php',
         type: 'POST',
         data: formData,
         success: function (response) {
-            console.log(response);
             responseData = response;
             loadPageInRootContainer('home');
         },

@@ -1,32 +1,5 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, getDocs, onSnapshot, addDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import loadPageInRootContainer from "./assets/js/loadPage.js";
 import { loginCall } from "./assets/js/login.js";
-import mapStudentData from "./assets/js/profileDisplay.js";
-
-//Firebase configuration json
-const firebaseConfig = {
-  apiKey: "AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs",
-  authDomain: "cms-08-02-2024.firebaseapp.com",
-  projectId: "cms-08-02-2024",
-  storageBucket: "cms-08-02-2024.appspot.com",
-  messagingSenderId: "686529005527",
-  appId: "1:686529005527:web:fc7c0d88ca9739e3572d92",
-  measurementId: "G-FHD42CTLG1"
-};
-
-//Initialization of firebase app
-const app = initializeApp(firebaseConfig);
-
-//Get reference to the firestore database
-const db = getFirestore(app);
-
-//Get collection reference of 'menu' collection
-const menuCollection = collection(db, "menu");
-const usersCollection = collection(db, "users");
-
-export { db, menuCollection, usersCollection };
-
 
 const defaultPage = 'home';
 
@@ -76,7 +49,6 @@ $(document).ready(function () {
       $(element).removeClass('active')
     });
     loadPageInRootContainer('profile');
-    mapStudentData();
   });
 
 });
