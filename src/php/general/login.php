@@ -1,9 +1,12 @@
 <?php
 
-const admin = [
-    "email" => "admin@example.com",
-    "password" => "admin@123"
-];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = isset($_POST["email"]) ? validate($_POST['email']) : "";
+    $password = isset($_POST["password"]) ? validate($_POST['password']) : "";
+    $rememberMe = isset($_POST["remember_me"]) ? $_POST["remember_me"] : false;
+
+    login($email, $password, $rememberMe);
+}
 
 function validate($data)
 {
@@ -13,17 +16,18 @@ function validate($data)
     return $data;
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+function login($email, $password, $rememberMe)
+{
+    include "../firebase/users/firebaseLogin.php";
+    include "../firebase/users/userOperations.php";
 
-    $response = [
-        "email" => $_POST["email"],
-        "password" => $_POST["password"],
-        "rememberMe" => isset($_POST["remember_me"]) ? $_POST["remember_me"] : false,
-        "isAdmin" => false
-    ];
-
-    $response["isAdmin"] = ($response["email"] == admin["email"] && $response["password"] == admin["password"]) ? true : false;
-
-    echo json_encode($response);
-    // echo "Hello";
+    $response = json_decode(firebaseLogin($email, $password), true);
+    if ($response['status'] == '200') {
+        echo getUser($response['userId']);
+    } else {
+        echo json_encode([
+            'status' => $response['status'],
+            'message' => $response['message'],
+        ]);
+    }
 }

@@ -40,10 +40,20 @@
 
 <body>
   <?php
-  require_once "../src/pages/global/navbar.html";
-  require_once '../src/pages/global/login.html';
+  require_once "../src/php/firebase/users/sessionManagement.php";
+  require_once "../src/php/general/loadContent.php";
+
+  $defaultPage = 'home';
+  $isLoggedIn = checkSession();
+
+  if ($isLoggedIn) {
+    require "../src/pages/global/navbar.php";
+    echo "<div id='root'></div>";
+    loadPage($defaultPage);
+  } else {
+    loadPage('login');
+  }
   ?>
-  <div id="root"></div>
 </body>
 
 </html>

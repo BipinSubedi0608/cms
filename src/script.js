@@ -1,28 +1,28 @@
 import loadPageInRootContainer from "./assets/js/loadPage.js";
 import { loginCall } from "./assets/js/login.js";
 
-const defaultPage = 'home';
+// const defaultPage = 'home';
 
-function loadLoginPage() {
-  $('.navbar').hide();
-  $('.loginBackgroundImage').show();
-}
+// function loadLoginPage() {
+//   $('.navbar').hide();
+//   $('.loginBackgroundImage').show();
+// }
 
-function loadMainPage() {
-  $('.loginBackgroundImage').hide();
-  $('.navbar').show();
-  loadPageInRootContainer(defaultPage);
-}
+// function loadMainPage() {
+//   $('.loginBackgroundImage').hide();
+//   $('.navbar').show();
+//   loadPageInRootContainer(defaultPage);
+// }
 
 $(document).ready(function () {
-  loadLoginPage();
+  // loadLoginPage();
 
   //Go to the main page after login
   $("#loginForm").submit(function (e) {
     e.preventDefault();
     let formData = $(this).serialize();
     loginCall(formData);
-    loadMainPage();
+    // loadMainPage();
   });
 
   //Go to login page after logout
@@ -52,6 +52,7 @@ $(document).ready(function () {
   });
 
 });
+
 
 
 

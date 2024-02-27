@@ -12,13 +12,13 @@ function getEntireMenu()
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     $response = curl_exec($ch);
-    curl_close($ch);
+    $responseArray = json_decode($response, true)['documents'];
 
     if (curl_errno($ch)) {
         return ('Error: ' . curl_error($ch));
     }
 
-    $responseArray = json_decode($response, true)['documents'];
+    curl_close($ch);
 
     for ($i = 0; $i <  count($responseArray); $i++) {
         $temp = explode('/', $responseArray[$i]['name']);
@@ -33,3 +33,4 @@ function getEntireMenu()
 
     return json_encode($documents);
 }
+

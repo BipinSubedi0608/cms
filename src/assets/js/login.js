@@ -8,8 +8,14 @@ export function loginCall(formData) {
         type: 'POST',
         data: formData,
         success: function (response) {
-            responseData = response;
-            loadPageInRootContainer('home');
+            responseData = JSON.parse(response);
+            console.log(responseData);
+            if (responseData.status != undefined && responseData.status != 200) {
+                alert(`Error ${responseData.status}: ${responseData.message}`)
+            } else {
+                alert("Login Sucessful!!");
+                loadPageInRootContainer('home');
+            }
         },
         error: function (error) {
             responseData = error;

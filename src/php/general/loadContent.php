@@ -1,13 +1,14 @@
 <?php
+
 if (isset($_POST['page'])) {
-    $page = $_POST['page'];
+    $pageName = $_POST['page'];
     ob_start();
 
     // Include the loadbackground.php file
     require 'loadbackground.php';
 
     // Get the background style
-    $bgStyle = loadBackground($page);
+    $bgStyle = loadBackground($pageName);
 
     // Output the background style
     echo '<style>
@@ -17,28 +18,36 @@ if (isset($_POST['page'])) {
         background-position: center;
         width: 100%;
         height: 100vh;
-        margin: 0; /* Remove default body margin */
+        margin: 0;
     }
 </style>';
 
+    loadPage($pageName);
+
+    $output = ob_get_clean();
+    echo trim($output);
+}
+
+function loadPage($page)
+{
     switch ($page) {
+        case 'login':
+            require __DIR__ . "/../../pages/login/login.html";
+            break;
         case 'home':
-            require "../../pages/home/home.html";
+            require __DIR__ . "/../../pages/home/home.html";
             break;
         case 'about':
-            require "../../pages/about/about.html";
+            require __DIR__ . "/../../pages/about/about.html";
             break;
         case 'menu':
-            require "../../pages/menu/menu.php";
+            require __DIR__ . "/../../pages/menu/menu.php";
             break;
         case 'profile':
-            require "../../pages/profile/profile.php";
+            require __DIR__ . "/../../pages/profile/profile.php";
             break;
         default:
             echo "<h2>Page not found</h2>";
             break;
     }
-
-    $output = ob_get_clean();
-    echo trim($output);
 }
