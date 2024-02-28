@@ -1,7 +1,7 @@
 <?php
 
 //Session Life Time in seconds
-$sessionLifeTime = 2 * 60;
+$sessionLifeTime = 60 * 60;
 
 ini_set('session.cookie_lifetime', $sessionLifeTime);
 ini_set('session.gc-maxlifetime', $sessionLifeTime);

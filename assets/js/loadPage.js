@@ -1,6 +1,6 @@
 export default function loadPageInRootContainer(page) {
     $.ajax({
-        url: '../../src/php/general/loadContent.php',
+        url: '../../php/general/loadContent.php',
         type: 'POST',
         data: { page: page },
         success: function (response) {

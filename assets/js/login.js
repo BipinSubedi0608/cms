@@ -2,7 +2,7 @@ let responseData = {};
 
 export function loginCall(formData) {
     $.ajax({
-        url: '../../src/php/general/login.php',
+        url: '../../php/general/login.php',
         type: 'POST',
         data: { 'operation': 'login', ...formData },
         success: function (response) {
@@ -28,7 +28,7 @@ export function getUserData() {
 
 export function logoutCall() {
     $.ajax({
-        url: '../../src/php/general/login.php',
+        url: '../../php/general/login.php',
         type: 'POST',
         data: { 'operation': 'logout' },
         success: function (response) {

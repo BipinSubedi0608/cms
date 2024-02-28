@@ -1,8 +1,8 @@
-<?php include '../../php/firebase/menu/menuOperations.php'; ?>
-<?php include '../../php/firebase/users/userOperations.php'; ?>
-<?php include '../../php/firebase/users/sessionManagement.php'; ?>
-
 <?php
+include '../../php/firebase/menu/menuOperations.php';
+include '../../php/firebase/users/userOperations.php';
+include '../../php/firebase/users/sessionManagement.php';
+
 $foods = json_decode(getEntireMenu(), true);
 $currentUserId = getCurrentUserFromSession()['id'];
 $isAdmin = checkAdmin($currentUserId);

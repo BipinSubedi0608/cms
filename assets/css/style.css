@@ -189,20 +189,6 @@ p {
 
 /* Menu.css Ends */
 
-/* Profile.css Starts */
-.editProfileBtn {
-  background-color: #ff2800;
-  color: white;
-  transition: all 0.5s ease-in-out;
-}
-
-.editProfileBtn:hover {
-  background-color: #d21f00;
-  color: white;
-}
-
-/* Profile.css Ends */
-
 /* About.css Starts */
 .vertical-center {
   display: flex;

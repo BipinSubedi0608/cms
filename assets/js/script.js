@@ -1,5 +1,5 @@
-import loadPageInRootContainer from "./assets/js/loadPage.js";
-import { loginCall, logoutCall } from "./assets/js/login.js";
+import loadPageInRootContainer from "./loadPage.js";
+import { loginCall, logoutCall } from "./login.js";
 
 $(document).ready(function () {
 
@@ -14,6 +14,8 @@ $(document).ready(function () {
 
   $('#homePageOrderBtn').click(function (e) {
     loadPageInRootContainer('menu');
+    $('.active').removeClass("active");
+    $('.navbarBtn[data-page="menu"]').addClass("active");
   });
 
   $('.logoutBtn').click(function (e) {
@@ -25,18 +27,14 @@ $(document).ready(function () {
   $('.navbarBtn').click(function (e) {
     e.preventDefault();
     var page = $(this).data('page');
-    [...$('.navbarBtn')].forEach((element) => {
-      $(element).removeClass('active')
-    });
+    $('.active').removeClass("active");
     $(this).addClass('active');
     loadPageInRootContainer(page);
   });
 
   $('.profileBtn').click(function (e) {
     e.preventDefault();
-    [...$('.navbarBtn')].forEach((element) => {
-      $(element).removeClass('active')
-    });
+    $('.active').removeClass("active");
     loadPageInRootContainer('profile');
   });
 

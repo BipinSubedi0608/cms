@@ -1,8 +1,15 @@
+<?php
+include_once __DIR__ . '/../../php/firebase/users/sessionManagement.php';
+include_once __DIR__ . '/../../php/firebase/users/userOperations.php';
+
+$currentUserId = getCurrentUserFromSession()['id'];
+$currentUser = json_decode(getUser($currentUserId), true);
+?>
+
 <nav class="navbar sticky-top navbar-expand-lg navbarBackground">
     <div class="container-fluid mx-lg-5">
         <a class="navbar-brand logoHeader" href="https://plustwo.vac.edu.np/" target="_blank">
-            <img src="../src/assets/images/VASS-Logo.png" alt="User Avatar" width="70" height="70"
-                class="navbarLogo rounded-circle">
+            <img src="../../assets/images/VASS-Logo.png" alt="VAC" width="70" height="70" class="navbarLogo rounded-circle">
         </a>
 
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -11,7 +18,7 @@
                     <a class="nav-link active mx-lg-5 navbarBtn" href="#" data-page="home">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link mx-lg-5 navbarBtn " href="#" data-page="menu">Menu</a>
+                    <a class="nav-link mx-lg-5 navbarBtn" href="#" data-page="menu">Menu</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link mx-lg-5 navbarBtn" href="#" data-page="about">About</a>
@@ -21,14 +28,13 @@
 
         <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <img src="../src/assets/images/Default-Profile.png" alt="User Avatar" width="40" height="40"
-                        class="rounded-circle">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="../../assets/images/Default-Profile.png" alt="User Avatar" width="40" height="40" class="rounded-circle">
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark position-absolute"
-                    aria-labelledby="navbarDropdown">
-                    <li class="dropdown-item disabled d-lg-auto">User Name</li>
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark position-absolute" aria-labelledby="navbarDropdown">
+                    <li class="dropdown-item disabled d-lg-auto">
+                        <?php echo $currentUser['name']; ?>
+                    </li>
                     <li><a class="dropdown-item profileBtn" href="#">Profile</a></li>
                     <li>
                         <hr class="dropdown-divider">
@@ -37,16 +43,14 @@
                 </ul>
             </li>
         </ul>
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarNavOffcanvas"
-            aria-controls="navbarNavOffcanvas">
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarNavOffcanvas" aria-controls="navbarNavOffcanvas">
             <span class="navbar-toggler-icon"></span>
         </button>
 
     </div>
 </nav>
 
-<div class="offcanvas offcanvas-end bg-dark text-light" tabindex="-1" id="navbarNavOffcanvas"
-    aria-labelledby="navbarNavOffcanvasLabel">
+<div class="offcanvas offcanvas-end bg-dark text-light" tabindex="-1" id="navbarNavOffcanvas" aria-labelledby="navbarNavOffcanvasLabel">
     <div class="offcanvas-header">
         <span class="offcanvas-title iconLogoHeader" id="navbarNavOffcanvasLabel">VAC</span>
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>

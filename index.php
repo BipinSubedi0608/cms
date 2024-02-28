@@ -24,31 +24,31 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
   <!-- External CSS -->
-  <link rel="stylesheet" href="../src/assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/style.css">
 
   <!-- External Javascript -->
-  <script src="../src/assets/js/profileDisplay.js" type="module" defer></script>
-  <script src="../src/assets/js/loadPage.js" type="module" defer></script>
-  <script src="../src/assets/js/login.js" type="module" defer></script>
+  <script src="assets/js/profileDisplay.js" type="module" defer></script>
+  <script src="assets/js/loadPage.js" type="module" defer></script>
+  <script src="assets/js/login.js" type="module" defer></script>
 
-  <script src="../src/script.js" type="module" defer></script>
+  <script src="assets/js/script.js" type="module" defer></script>
 
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
 
   <title>VAC Canteen</title>
 </head>
 
 <body>
   <?php
-  require_once "../src/php/firebase/users/sessionManagement.php";
-  require_once "../src/php/general/loadContent.php";
+  require_once "php/firebase/users/sessionManagement.php";
+  require_once "php/general/loadContent.php";
 
   $defaultPage = 'home';
   $isLoggedIn = checkSession();
 
   if ($isLoggedIn == 'true') {
     refreshSession();
-    require "../src/pages/global/navbar.html";
+    require "pages/global/navbar.php";
   } else {
     loadPage('login');
   }
