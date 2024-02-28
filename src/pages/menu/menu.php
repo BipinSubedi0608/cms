@@ -1,15 +1,19 @@
 <?php include '../../php/firebase/menu/menuOperations.php'; ?>
 <?php include '../../php/firebase/users/userOperations.php'; ?>
+<?php include '../../php/firebase/users/sessionManagement.php'; ?>
 
 <?php
 $foods = json_decode(getEntireMenu(), true);
-$isAdmin = json_decode(getCurrentUser(), true)['isAdmin'];
+$currentUserId = getCurrentUserFromSession()['id'];
+$isAdmin = checkAdmin($currentUserId);
 ?>
 
 <div class='menuPage container'>
 
     <?php
-    if($isAdmin) include 'addFoodModel.html';
+    if ($isAdmin == 'true') {
+        include 'addFoodModel.html';
+    }
     ?>
 
     <h1 class='menuHeading row justify-content-center mt-4'>Our Menu</h1>
@@ -26,7 +30,7 @@ $isAdmin = json_decode(getCurrentUser(), true)['isAdmin'];
                         <div class='card-text'>Quantity: <span class='foodQuantity'>{$food['quantity']}</span></div>
                         <vr class='vr'></vr>
                         <div class='card-text '>Price: Rs. <span class='foodPrice'>{$food['price']}</span></div>
-                    </div>" . ($isAdmin ? "
+                    </div>" . ($isAdmin == 'true' ? "
 
                     <div class='text-center hstack gap-3'>
                         <button type='button' class='editBtn btn btn-warning mt-3'>

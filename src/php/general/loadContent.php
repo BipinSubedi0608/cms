@@ -2,30 +2,7 @@
 
 if (isset($_POST['page'])) {
     $pageName = $_POST['page'];
-    ob_start();
-
-    // Include the loadbackground.php file
-    require 'loadbackground.php';
-
-    // Get the background style
-    $bgStyle = loadBackground($pageName);
-
-    // Output the background style
-    echo '<style>
-    body {
-        ' . $bgStyle . '
-        background-size: cover; 
-        background-position: center;
-        width: 100%;
-        height: 100vh;
-        margin: 0;
-    }
-</style>';
-
     loadPage($pageName);
-
-    $output = ob_get_clean();
-    echo trim($output);
 }
 
 function loadPage($page)

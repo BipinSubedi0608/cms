@@ -1,11 +1,18 @@
 <?php
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = isset($_POST["email"]) ? validate($_POST['email']) : "";
-    $password = isset($_POST["password"]) ? validate($_POST['password']) : "";
-    $rememberMe = isset($_POST["remember_me"]) ? $_POST["remember_me"] : false;
+include "../firebase/users/firebaseLogin.php";
+include "../firebase/users/userOperations.php";
 
-    login($email, $password, $rememberMe);
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['operation'])) {
+    if ($_POST['operation'] == 'login') {
+        $email = isset($_POST["email"]) ? validate($_POST['email']) : "";
+        $password = isset($_POST["password"]) ? validate($_POST['password']) : "";
+        login($email, $password);
+    } else if ($_POST['operation'] == 'logout') {
+        logout();
+    } else {
+        echo "Invalid Operation.";
+    }
 }
 
 function validate($data)
@@ -16,11 +23,8 @@ function validate($data)
     return $data;
 }
 
-function login($email, $password, $rememberMe)
+function login($email, $password)
 {
-    include "../firebase/users/firebaseLogin.php";
-    include "../firebase/users/userOperations.php";
-
     $response = json_decode(firebaseLogin($email, $password), true);
     if ($response['status'] == '200') {
         echo getUser($response['userId']);
@@ -30,4 +34,10 @@ function login($email, $password, $rememberMe)
             'message' => $response['message'],
         ]);
     }
+}
+
+function logout()
+{
+    firebaseLogout();
+    echo "Logout succesful";
 }

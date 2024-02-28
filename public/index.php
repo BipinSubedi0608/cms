@@ -46,14 +46,17 @@
   $defaultPage = 'home';
   $isLoggedIn = checkSession();
 
-  if ($isLoggedIn) {
-    require "../src/pages/global/navbar.php";
-    echo "<div id='root'></div>";
-    loadPage($defaultPage);
+  if ($isLoggedIn == 'true') {
+    refreshSession();
+    require "../src/pages/global/navbar.html";
   } else {
     loadPage('login');
   }
   ?>
+
+  <div id="root">
+    <?php if ($isLoggedIn == 'true') loadPage($defaultPage) ?>
+  </div>
 </body>
 
 </html>

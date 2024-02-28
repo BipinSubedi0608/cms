@@ -1,5 +1,7 @@
 <?php
 
+include "sessionManagement.php";
+
 function firebaseLogin($email, $password)
 {
     $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
@@ -34,12 +36,14 @@ function firebaseLogin($email, $password)
             'refreshToken' => $responseObj['refreshToken'],
             'lastLoginTime' => time(),
         ];
-        $_SESSION['currentUser'] = $currentUser;
+
+        $msg = createSession('currentUser', $currentUser);
 
         return json_encode([
             'status' => '200',
             'message' => 'Logged In Successfully',
             'userId' => $currentUser['id'],
+            'msg' => $msg,
         ]);
     } else {
         return json_encode([
@@ -47,4 +51,8 @@ function firebaseLogin($email, $password)
             'message' => $responseObj['error']['message'],
         ]);
     }
+}
+
+function firebaseLogout() {
+    destroySession();
 }

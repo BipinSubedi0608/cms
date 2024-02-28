@@ -1,13 +1,13 @@
 <?php
-$apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
-$projectId = 'cms-08-02-2024';
-$collection = 'menu';
-$url = "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents/$collection?key=$apiKey";
 
 function getEntireMenu()
 {
+    $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
+    $projectId = 'cms-08-02-2024';
+    $collection = 'menu';
+    $url = "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents/$collection?key=$apiKey";
     $documents = array();
-    global $url;
+
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -33,4 +33,3 @@ function getEntireMenu()
 
     return json_encode($documents);
 }
-

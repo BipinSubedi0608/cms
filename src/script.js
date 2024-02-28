@@ -1,37 +1,27 @@
 import loadPageInRootContainer from "./assets/js/loadPage.js";
-import { loginCall } from "./assets/js/login.js";
-
-// const defaultPage = 'home';
-
-// function loadLoginPage() {
-//   $('.navbar').hide();
-//   $('.loginBackgroundImage').show();
-// }
-
-// function loadMainPage() {
-//   $('.loginBackgroundImage').hide();
-//   $('.navbar').show();
-//   loadPageInRootContainer(defaultPage);
-// }
+import { loginCall, logoutCall } from "./assets/js/login.js";
 
 $(document).ready(function () {
-  // loadLoginPage();
 
-  //Go to the main page after login
   $("#loginForm").submit(function (e) {
     e.preventDefault();
-    let formData = $(this).serialize();
+    let formData = {};
+    $(this).serializeArray().forEach(function (item) {
+      formData[item.name] = item.value;
+    });
     loginCall(formData);
-    // loadMainPage();
   });
 
-  //Go to login page after logout
+  $('#homePageOrderBtn').click(function (e) {
+    loadPageInRootContainer('menu');
+  });
+
   $('.logoutBtn').click(function (e) {
     e.preventDefault();
-    loadLoginPage();
+    logoutCall();
+    loadPageInRootContainer('login');
   });
 
-  //Navigate to specific page on click of a navbar button
   $('.navbarBtn').click(function (e) {
     e.preventDefault();
     var page = $(this).data('page');
@@ -42,7 +32,6 @@ $(document).ready(function () {
     loadPageInRootContainer(page);
   });
 
-  //Navigate to profile page on click of profile button
   $('.profileBtn').click(function (e) {
     e.preventDefault();
     [...$('.navbarBtn')].forEach((element) => {

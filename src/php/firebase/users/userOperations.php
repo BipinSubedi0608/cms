@@ -37,3 +37,9 @@ function getUser($userId)
 
     return json_encode($currentUser);
 }
+
+function checkAdmin($userId)
+{
+    $currentUser = json_decode(getUser($userId), true);
+    return json_encode($currentUser['isAdmin']);
+}
