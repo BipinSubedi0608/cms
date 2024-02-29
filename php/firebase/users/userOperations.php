@@ -1,6 +1,6 @@
 <?php
 
-function getUser($userId)
+function getUser($userId, $requirePassword = false)
 {
     $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
     $projectId = 'cms-08-02-2024';
@@ -30,6 +30,9 @@ function getUser($userId)
             $currentUser[$key] = $value['stringValue'];
         } else if (isset($value['mapValue'])) {
             foreach ($value['mapValue']['fields'] as $subKey => $subValue) {
+                if ($requirePassword == false && $subKey == 'password') {
+                    continue;
+                }
                 $currentUser[$key][$subKey] = $subValue['stringValue'];
             }
         }
@@ -38,8 +41,14 @@ function getUser($userId)
     return json_encode($currentUser);
 }
 
+function getUserPassword($userId)
+{
+    $currentUser = json_decode(getUser($userId, 'true'), true);
+    return json_encode($currentUser['credentials']['password']);
+}
+
 function checkAdmin($userId)
 {
     $currentUser = json_decode(getUser($userId), true);
-    return json_encode($currentUser['isAdmin']);
+    return $currentUser['isAdmin'];
 }

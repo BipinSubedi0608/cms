@@ -8,7 +8,6 @@ $currentUser = json_decode(getUser($currentUserId), true);
 
 <div class="row w-100">
     <div class="col-4">
-
         <button class="editProfileBtn btn btn-warning m-4"><i class="fa-solid fa-pencil"></i> Update Password</button>
 
         <div class="card m-4" style="width: 70%;">
@@ -37,6 +36,8 @@ $currentUser = json_decode(getUser($currentUserId), true);
             </div>
         </div>
     </div>
+
+
     <div class="col-8">
         <div class="card m-4" style="width: 80%;">
             <div class="card-header">
@@ -78,7 +79,7 @@ $currentUser = json_decode(getUser($currentUserId), true);
             </div>
         </div>
 
-        <div class="card m-4" style="width: 80%;">
+        <div class="card mx-4 mt-5" style="width: 80%;">
             <div class="card-header">
                 <h4>Credentials</h4>
             </div>
@@ -90,7 +91,6 @@ $currentUser = json_decode(getUser($currentUserId), true);
                             <span class="stdPhone">
                                 <?php echo $currentUser['credentials']['phone']; ?>
                             </span>
-                            <i class="eyeBtn ms-1 fa-solid fa-eye"></i>
                         </td>
                     </tr>
                     <tr>
@@ -99,16 +99,6 @@ $currentUser = json_decode(getUser($currentUserId), true);
                             <span class="stdEmail">
                                 <?php echo $currentUser['credentials']['email']; ?>
                             </span>
-                            <i class="eyeBtn ms-1 fa-solid fa-eye"></i>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Password</th>
-                        <td class="user-select-none">
-                            <span class="stdPassword">
-                                <?php echo $currentUser['credentials']['password']; ?>
-                            </span>
-                            <i class="eyeBtn ms-1 fa-solid fa-eye"></i>
                         </td>
                     </tr>
                 </table>

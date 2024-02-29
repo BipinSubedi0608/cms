@@ -36,14 +36,12 @@ function firebaseLogin($email, $password)
             'refreshToken' => $responseObj['refreshToken'],
             'lastLoginTime' => time(),
         ];
-
-        $msg = createSession('currentUser', $currentUser);
+        createSession('currentUser', $currentUser);
 
         return json_encode([
             'status' => '200',
             'message' => 'Logged In Successfully',
             'userId' => $currentUser['id'],
-            'msg' => $msg,
         ]);
     } else {
         return json_encode([

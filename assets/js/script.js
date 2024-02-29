@@ -1,5 +1,6 @@
 import loadPageInRootContainer from "./loadPage.js";
 import { loginCall, logoutCall } from "./login.js";
+import togglePassword from './togglePassword.js';
 
 $(document).ready(function () {
 
@@ -10,6 +11,10 @@ $(document).ready(function () {
       formData[item.name] = item.value;
     });
     loginCall(formData);
+  });
+
+  $('.eyeBtn').click(function (e) {
+    togglePassword();
   });
 
   $('#homePageOrderBtn').click(function (e) {

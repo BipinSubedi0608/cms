@@ -1,29 +1,52 @@
-let responseData = {};
-
 export function loginCall(formData) {
+    Swal.fire({
+        title: 'Loading...',
+        html: `<div style="overflow: hidden"><div class="spinner-border"></div></div>`,
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        onBeforeOpen: () => {
+            Swal.showLoading();
+        },
+    });
+
     $.ajax({
         url: '../../php/general/login.php',
         type: 'POST',
         data: { 'operation': 'login', ...formData },
         success: function (response) {
-            responseData = JSON.parse(response);
-            console.log(responseData);
-            if (responseData.status != undefined && responseData.status != 200) {
-                alert(`Error ${responseData.status}: ${responseData.message}`)
+            Swal.close();
+            console.log(response);
+            response = JSON.parse(response);
+
+            if (response.status != undefined && response.status != 200) {
+                Swal.fire({
+                    icon: 'error',
+                    title: `Error ${response.status}`,
+                    text: response.message,
+                    timer: 3000
+                });
             } else {
-                alert("Login Sucessful!!");
-                location.reload(true);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Login Successful!',
+                    showConfirmButton: false,
+                    timer: 1000
+                }).then(() => {
+                    location.reload(true);
+                });
             }
         },
         error: function (error) {
-            responseData = error;
+            Swal.close();
             console.log(`Error ${error.status}: ${error.statusText}`);
+            Swal.fire({
+                icon: 'error',
+                title: `Error ${error.status}`,
+                text: error.message,
+                timer: 3000
+            });
         }
     });
-}
-
-export function getUserData() {
-    return responseData;
 }
 
 export function logoutCall() {
@@ -32,7 +55,6 @@ export function logoutCall() {
         type: 'POST',
         data: { 'operation': 'logout' },
         success: function (response) {
-            console.log(response);
             location.reload(true);
         },
         error: function (error) {

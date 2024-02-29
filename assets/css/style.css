@@ -5,6 +5,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Rosarivo&display=swap');
 
+
 /* Home.css Starts */
 body {
   background: url(../images/Home-Background.jpg);
@@ -32,10 +33,6 @@ p {
   height: 80vh;
   overflow: hidden;
 }
-
-/* .navbar {
-  display: none;
-} */
 
 @media (max-width: 768px) {
   .homeHeader {
@@ -73,11 +70,9 @@ p {
 
 .navbarBackground {
   background-image: url('../images/Home-Background.jpg');
-  /* Specify the path to your image */
   background-size: fixed;
   background-repeat: no-repeat;
   color: #fff;
-  /* Set text color to white or any suitable color for better visibility */
 }
 
 .iconLogoHeader {
@@ -108,7 +103,6 @@ p {
 
 .navbar-toggler-icon {
   color: white !important;
-  /* Set your desired toggler icon color */
 }
 
 .navbar-toggler:focus,
@@ -118,7 +112,6 @@ p {
 }
 
 /* Navbar.css Ends */
-
 
 
 /* Menu.css Starts */
@@ -189,6 +182,7 @@ p {
 
 /* Menu.css Ends */
 
+
 /* About.css Starts */
 .vertical-center {
   display: flex;
@@ -200,7 +194,6 @@ p {
 iframe.map-iframe {
   width: 100%;
   height: 300px;
-  /* Adjust the height as needed for tablets and PCs */
 }
 
 /* About.css Ends */
@@ -211,9 +204,6 @@ iframe.map-iframe {
   object-fit: contain;
 }
 
-/* .boxContainer{
-  overflow-y: hidden !important;
-} */
 .loginBackgroundImage {
   background-image: url("../../assets/images/LoginBackground.jpg");
   background-size: cover;
@@ -241,6 +231,5 @@ iframe.map-iframe {
     float: left !important;
   }
 }
-
 
 /* LoginPage Css Ends */

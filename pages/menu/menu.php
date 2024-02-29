@@ -4,7 +4,7 @@ include '../../php/firebase/users/userOperations.php';
 include '../../php/firebase/users/sessionManagement.php';
 
 $foods = json_decode(getEntireMenu(), true);
-$currentUserId = getCurrentUserFromSession()['id'];
+$currentUserId = getCurrentUserIdFromSession();
 $isAdmin = checkAdmin($currentUserId);
 ?>
 

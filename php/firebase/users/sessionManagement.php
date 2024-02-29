@@ -1,7 +1,7 @@
 <?php
 
 //Session Life Time in seconds
-$sessionLifeTime = 60 * 60;
+$sessionLifeTime = 24 * 60 * 60;
 
 ini_set('session.cookie_lifetime', $sessionLifeTime);
 ini_set('session.gc-maxlifetime', $sessionLifeTime);
@@ -27,9 +27,9 @@ function createSession($keyToStore, $dataToStore)
     $_SESSION[$keyToStore] = $dataToStore;
 }
 
-function getCurrentUserFromSession()
+function getCurrentUserIdFromSession()
 {
-    return $_SESSION['currentUser'];
+    return $_SESSION['currentUser']['id'];
 }
 
 function destroySession()
