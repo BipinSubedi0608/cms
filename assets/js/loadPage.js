@@ -1,4 +1,4 @@
-import loader from '../../pages/global/loadingComponent.js';
+import loader from '../../pages/global_pages/loadingComponent.js';
 
 export default function loadPageInRootContainer(page) {
     $('body').append(loader);
@@ -28,7 +28,6 @@ function loadBackground(page) {
     switch (page) {
         case 'home':
             backgroundData = "url(../assets/images/Home-Background.jpg)";
-            // background-image: url('../images/Home-Background.jpg');
             break;
         case 'about':
             backgroundData = "#222831";

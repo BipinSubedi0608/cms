@@ -44,10 +44,16 @@
 <body>
   <?php
   require_once "php/firebase/users/sessionManagement.php";
+  require_once "php/firebase/users/userOperations.php";
   require_once "php/general/loadContent.php";
 
-  $defaultPage = 'home';
   $loginStatus = json_decode(checkSession(), true);
+
+  if ($loginStatus['isLoggedIn'] == 'true') {
+    $isAdmin = checkAdmin(getCurrentUserIdFromSession());
+    $defaultPage = ($isAdmin == 'true') ? 'orders' : 'home';
+  }
+
   $sessionExpiredAlert = "
     <script>
       Swal.fire({
@@ -66,9 +72,10 @@
   ";
 
 
+  //Conditional Rendering for Login Status
   if ($loginStatus['isLoggedIn'] == 'true') {
     refreshSession();
-    require "pages/global/navbar.php";
+    require "pages/global_pages/navbar.php";
   } else {
 
     loadPage('login');

@@ -15,7 +15,6 @@ export function loginCall(formData) {
         data: { 'operation': 'login', ...formData },
         success: function (response) {
             Swal.close();
-            console.log(response);
             response = JSON.parse(response);
 
             if (response.status != undefined && response.status != 200) {

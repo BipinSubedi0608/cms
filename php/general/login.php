@@ -4,6 +4,7 @@ include "../firebase/users/firebaseLogin.php";
 include "../firebase/users/userOperations.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['operation'])) {
+
     if ($_POST['operation'] == 'login') {
         $email = isset($_POST["email"]) ? validate($_POST['email']) : "";
         $password = isset($_POST["password"]) ? validate($_POST['password']) : "";

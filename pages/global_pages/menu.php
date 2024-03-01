@@ -12,7 +12,15 @@ $isAdmin = checkAdmin($currentUserId);
 
     <?php
     if ($isAdmin == 'true') {
-        include 'addFoodModel.html';
+        include __DIR__ . '/../admin_only_pages/foodInputModel.html';
+        echo "
+        <div class='d-flex justify-content-center p-3'>
+            <button type='button' data-bs-toggle='modal' data-bs-target='#exampleModal' 
+            class='addBtn btn btn-success btn-lg fs-3 m-3 rounded-circle'>
+                <i class='fa-solid fa-plus'></i>
+            </button>
+        </div>
+        ";
     }
     ?>
 
