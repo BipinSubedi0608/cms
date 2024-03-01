@@ -2,7 +2,7 @@
 include '../../php/firebase/users/userOperations.php';
 include '../../php/firebase/users/sessionManagement.php';
 
-$currentUserId = getCurrentUserFromSession()['id'];
+$currentUserId = getCurrentUserIdFromSession();
 $currentUser = json_decode(getUser($currentUserId), true);
 ?>
 

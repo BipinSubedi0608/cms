@@ -23,14 +23,18 @@ export function loginCall(formData) {
                     icon: 'error',
                     title: `Error ${response.status}`,
                     text: response.message,
-                    timer: 3000
+                    showConfirmButton: true,
+                    timer: 3000,
+                    timerProgressBar: true,
                 });
+
             } else {
                 Swal.fire({
                     icon: 'success',
                     title: 'Login Successful!',
                     showConfirmButton: false,
-                    timer: 1000
+                    timer: 1500,
+                    timerProgressBar: true,
                 }).then(() => {
                     location.reload(true);
                 });
@@ -38,12 +42,13 @@ export function loginCall(formData) {
         },
         error: function (error) {
             Swal.close();
-            console.log(`Error ${error.status}: ${error.statusText}`);
             Swal.fire({
                 icon: 'error',
                 title: `Error ${error.status}`,
                 text: error.message,
-                timer: 3000
+                showConfirmButton: true,
+                timer: 3000,
+                timerProgressBar: true,
             });
         }
     });

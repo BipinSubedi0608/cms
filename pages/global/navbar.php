@@ -53,13 +53,24 @@ $isAdmin = (checkAdmin($currentUserId));
                         <?php echo $currentUserName; ?>
                     </li>
 
-                    <?php echo ($isAdmin == "true") ? '' : '<li><a class="dropdown-item profileBtn" href="#">Profile</a></li>';
+                    <?php echo ($isAdmin == "true") ? '' :
+                        '<li>
+                            <a class="dropdown-item profileBtn" href="#">
+                                Profile 
+                                <i class="fa-solid fa-user"></i>
+                            </a>
+                        </li>';
                     ?>
 
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="logoutBtn dropdown-item" href="#">Logout</a></li>
+                    <li>
+                        <a class="logoutBtn dropdown-item" href="#">
+                            Logout 
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                        </a>
+                    </li>
                 </ul>
             </li>
         </ul>

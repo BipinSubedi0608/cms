@@ -4,8 +4,8 @@ export default function togglePassword() {
         $('.eyeBtn').removeClass('fa-eye');
         $('.eyeBtn').addClass('fa-eye-slash');
         $('.eyeBtn').siblings('input').attr('type', 'password');
-    } else {
 
+    } else {
         $('.eyeBtn').removeClass('fa-eye-slash');
         $('.eyeBtn').addClass('fa-eye');
         $('.eyeBtn').siblings('input').attr('type', 'text');

@@ -47,18 +47,39 @@
   require_once "php/general/loadContent.php";
 
   $defaultPage = 'home';
-  $isLoggedIn = checkSession();
+  $loginStatus = json_decode(checkSession(), true);
+  $sessionExpiredAlert = "
+    <script>
+      Swal.fire({
+        icon: 'info',
+        title: 'Session Expired',
+        text: 'Please re-login',
+        showConfirmButton: true,
+        allowOutsideClick: false,
+      }).then((value) => {
+        if (value.isConfirmed) {
+          Swal.close();
+          // location.reload(true);
+        }
+      });
+    </script>
+  ";
 
-  if ($isLoggedIn == 'true') {
+
+  if ($loginStatus['isLoggedIn'] == 'true') {
     refreshSession();
     require "pages/global/navbar.php";
   } else {
+
     loadPage('login');
+    if ($loginStatus['message'] == 'Session Expired') {
+      echo $sessionExpiredAlert;
+    }
   }
   ?>
 
   <div id="root">
-    <?php if ($isLoggedIn == 'true') loadPage($defaultPage) ?>
+    <?php if ($loginStatus['isLoggedIn'] == 'true') loadPage($defaultPage) ?>
   </div>
 </body>
 
