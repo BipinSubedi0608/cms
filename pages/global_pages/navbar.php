@@ -4,7 +4,7 @@ include_once __DIR__ . '/../../php/firebase/users/userOperations.php';
 
 $currentUserId = getCurrentUserIdFromSession();
 $currentUserName = json_decode(getUser($currentUserId), true)['name'];
-$isAdmin = (checkAdmin($currentUserId));
+$isAdmin = checkAdmin($currentUserId);
 ?>
 
 <nav class="navbar sticky-top navbar-expand-lg navbarBackground">
@@ -67,7 +67,7 @@ $isAdmin = (checkAdmin($currentUserId));
                     </li>
                     <li>
                         <a class="logoutBtn dropdown-item" href="#">
-                            Logout 
+                            Logout
                             <i class="fa-solid fa-right-from-bracket"></i>
                         </a>
                     </li>

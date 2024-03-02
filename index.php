@@ -30,7 +30,6 @@
   <link rel="stylesheet" href="assets/css/style.css">
 
   <!-- External Javascript -->
-  <script src="assets/js/profileDisplay.js" type="module" defer></script>
   <script src="assets/js/loadPage.js" type="module" defer></script>
   <script src="assets/js/login.js" type="module" defer></script>
 

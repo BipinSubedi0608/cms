@@ -10,7 +10,7 @@ function firebaseLogin($email, $password)
     $userDetails = json_encode([
         'email' => $email,
         'password' => $password,
-        'returnSecureToken' => true
+        'returnSecureToken' => true,
     ]);
 
     $ch = curl_init($url);

@@ -1,31 +1,179 @@
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body d-flex justify-content-center">
-
-                <div class='foodCard card col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 m-3' style='width: 15rem;'>
-                    <img class='foodImage card-img-top py-2' src='' alt='Food Image'>
-                    <div class='card-body'>
-                        <div class='foodName card-title h3'>
-                            <input placeholder="Enter the food name">
-                        </div>
-                        <div class='foodDetailsContainer hstack gap-2'>
-                            <div class='card-text'>Quantity: <input></div>
-                            <vr class='vr'></vr>
-                            <div class='card-text '>Price: Rs. <input></div>
+            <form method="POST" id="addMenu">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Item</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex justify-content-center">
+                    <div class='foodCard card col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 m-3' style='width: 15rem;'>
+                        <button style="outline: none; border: none;"><i
+                                class="fa fa-plus-circle foodImage card-img-top py-2 fa-8x d-flex align-items-center justify-content-center"
+                                aria-hidden="true"></i></button>
+                        <div class='card-body'>
+                            <div class='foodName card-title h3'>
+                                <input class="custom-input" name="foodName" style="width:100%;">
+                            </div>
+                            <div class='foodDetailsContainer hstack gap-2'>
+                                <div class='card-text '>Quantity: <input style="width:100%;" class="foodQuantity"
+                                        name="foodQuantity"></div>
+                                <vr class='vr'></vr>
+                                <div class='card-text '>Price: Rs. <input style="width: 100%;" class="foodPrice"
+                                        name="foodPrice"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary getValueBtn" data-bs-dismiss="modal">Add Item</button>
+                    <button type="button" class="btn btn-primary saveValueBtn" data-bs-dismiss="modal"
+                        style="display: none;">Save Item</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        let operation = '';
+
+        function updateCard(foodCard, newFoodName, newFoodQuantity, newFoodPrice) {
+            if (newFoodName !== '') {
+                foodCard.find('.foodName').text(newFoodName);
+            }
+            if (newFoodQuantity !== '') {
+                foodCard.find('.foodQuantity').text(newFoodQuantity);
+            }
+            if (newFoodPrice !== '') {
+                foodCard.find('.foodPrice').text(newFoodPrice);
+            }
+        }
+
+        $(document).on('click', '.editBtn, .dltBtn', function (e) {
+            e.preventDefault();
+            if ($(this).hasClass('editBtn')) {
+                operation = 'edit';
+                //Extract current card Details
+                var foodCard = $(this).closest(".foodCard");
+                var foodName = foodCard.find('.foodName').text().trim();
+                var foodQuantity = foodCard.find('.foodQuantity').text().trim();
+                var foodPrice = foodCard.find('.foodPrice').text().trim();
+                var foodKey = foodCard.data('key');
+
+                //set the modal field with the current card details;
+                $('#exampleModal').find('.modal-title').text('Edit Item');
+                $('#exampleModal').find('.modal-footer .getValueBtn').css('display', 'none');
+                $('#exampleModal').find('.modal-footer .saveValueBtn').css('display', 'block');
+                $('#exampleModal').find('input[name="foodName"]').val(foodName);
+                $('#exampleModal').find('input[name="foodQuantity"]').val(foodQuantity);
+                $('#exampleModal').find('input[name="foodPrice"]').val(foodPrice);
+                var foodKey = $('#exampleModal').data('foodKey', foodKey);
+
+                // Open the modal programmatically
+                $('#exampleModal').modal('show');
+
+            }
+            else if ($(this).hasClass("dltBtn")) {
+                console.log("dLT BTN PRESSED");
+            }
+        })
+        // Attach click event handler to the button only once
+        $(document).on('click', '.getValueBtn, .deleteBtn, .saveValueBtn', function (e) {
+            e.preventDefault();
+            var foodData = {};
+            //TO ADD MENU CARD
+            if ($(this).hasClass('getValueBtn')) {
+                operation = 'add';
+                foodData.foodName = $(".custom-input").val();
+                foodData.foodQuantity = $('.foodQuantity').val();
+                foodData.foodPrice = $('.foodPrice').val();
+
+                // Reset the form
+                $('#addMenu')[0].reset();
+            }
+
+            //TO DELETE MENU CARD
+            else if ($(this).hasClass('deleteBtn')) {
+                operation = 'delete';
+                var key = $(this).closest('.foodCard').data('key');
+            }
+
+            //TO EDIT MENU CARD
+            else if ($(this).hasClass('saveValueBtn')) {
+                console.log("Btn is Clicked")
+                var newFoodName = $('#exampleModal').find('input[name="foodName"]').val();
+                var newFoodQuantity = $('#exampleModal').find('input[name="foodQuantity"]').val();
+                var newFoodPrice = $('#exampleModal').find('input[name="foodPrice"]').val();
+                var foodKey = $('#exampleModal').data('foodKey');
+
+                foodData.foodName = newFoodName;
+                foodData.foodQuantity = newFoodQuantity
+                foodData.foodPrice = newFoodPrice;
+
+                // Reset the form
+                $('#addMenu')[0].reset();
+                $('#exampleModal').find('.modal-title').text('Add Item');
+                $('#exampleModal').find('.modal-footer .getValueBtn').css('display', 'block');
+                $('#exampleModal').find('.modal-footer .saveValueBtn').css('display', 'none');
+            }
+
+            // Send data to PHP via AJAX
+            $.ajax({
+                url: "../../php/firebase/menu/menuOperations.php",
+                type: 'POST',
+                data: { 'foodKey': foodKey, 'key': key, 'operation': operation, ...foodData },
+                success: function (response) {
+                    // Handle success response from PHP
+                    console.log(response);
+                    // Modify the createCard template with dynamic values and append to container
+                    if (operation == 'add') {
+                        var modifiedCard = `
+                <div class="row justify-content-center" style="overflow-x: hidden;">
+                <div class="foodContainer card col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 m-3" style="width: 15rem;">
+                    <img class="foodImage card-img-top py-2" src="../src/assets/images/Default-Food-Item.jpg" alt="Card image cap">
+                    <div class="card-body">
+                        <div class="foodName card-title h3">${foodData.foodName}</div>
+                        <div class="foodDetailsContainer hstack gap-2">
+                            <div class="card-text">Quantity: <span class="foodQuantity">${foodData.foodQuantity}</span></div>
+                            <vr class="vr"></vr>
+                            <div class="card-text ">Price: Rs. <span class="foodPrice">${foodData.foodPrice}</span></div>
+                        </div>
+                        <div class='text-center hstack gap-3'>
+                        <button type='button' class='editBtn btn btn-warning mt-3'>
+                            <i class='fa-solid fa-pencil'></i>&#160;Edit
+                        </button>
+                        <button type='button' class='deleteBtn btn btn-outline-danger mt-3'>
+                            <i class='fa-solid fa-trash'></i>&#160;Delete
+                        </button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+                `;
+                        $('.foodContainer')[0].innerHTML += modifiedCard;
+                    }
+                    else if (operation == 'delete') {
+                        $('.foodCard[data-key="' + key + '"]').remove();
+                    }
+                    else if (operation == 'edit') {
+                        // Update card content with new values
+                        var foodCard = $('.foodCard[data-key="' + $('#exampleModal').data('foodKey') + '"]');
+                        updateCard(foodCard, newFoodName, newFoodQuantity, newFoodPrice);
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                    // Handle error response
+                    console.error(xhr.responseText);
+                }
+            });
+
+        });
+    });
+
+
+
+</script>

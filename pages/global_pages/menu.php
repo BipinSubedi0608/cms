@@ -30,7 +30,7 @@ $isAdmin = checkAdmin($currentUserId);
         <?php
         foreach ($foods as $food) {
             echo "
-            <div key={$food['id']} class='foodCard card col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 m-3' style='width: 15rem;'>
+            <div data-key={$food['id']} class='foodCard card col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 m-3' style='width: 15rem;'>
                 <img class='foodImage card-img-top py-2' src='{$food['imgUrl']}' alt='Card image cap'>
                 <div class='card-body'>
                     <div class='foodName card-title h3'>{$food['name']}</div>
@@ -66,3 +66,16 @@ $isAdmin = checkAdmin($currentUserId);
         ?>
     </div>
 </div>
+
+<script type="module">
+    import {
+        deleteFood
+    } from '../../assets/js/foodOperations.js';
+
+    $(document).ready(() => {
+        $('deleteBtn').click(function(e) {
+            let foodId = $(this).parent().parent().data('key');
+            deleteFood(foodId);
+        });
+    });
+</script>
