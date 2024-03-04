@@ -5,11 +5,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['operation'])) {
     $operation = $_POST['operation'];
     switch ($operation) {
         case 'add':
+            $imgUrl = (isset($_POST['imgUrl']) && !empty($_POST['imgUrl'])) ? $_POST['imgUrl'] : __DIR__ . '/../../../assets/images/Image-Input.jpg';
             $foodName = isset($_POST['foodName']) ? $_POST['foodName'] : '';
             $foodQuantity = isset($_POST['foodQuantity']) ? $_POST['foodQuantity'] : '';
             $foodPrice = isset($_POST['foodPrice']) ? $_POST['foodPrice'] : '';
 
-            echo addMenu($foodName, $foodQuantity, $foodPrice);
+            echo addMenu($foodName, $foodQuantity, $foodPrice, $imgUrl);
             break;
 
         case 'edit':
@@ -70,7 +71,7 @@ function getEntireMenu()
 
 
 
-function addMenu($foodName, $foodQuantity, $foodPrice, $imageURL = "")
+function addMenu($foodName, $foodQuantity, $foodPrice, $imageURL)
 {
     $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
     $projectId = 'cms-08-02-2024';
