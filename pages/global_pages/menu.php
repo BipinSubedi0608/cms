@@ -12,10 +12,10 @@ $isAdmin = checkAdmin($currentUserId);
 
     <?php
     if ($isAdmin == 'true') {
-        include __DIR__ . '/../admin_only_pages/foodInputModel.html';
+        include __DIR__ . '/../admin_only_pages/foodInputModal.html';
         echo "
         <div class='d-flex justify-content-center p-3'>
-            <button type='button' data-bs-toggle='modal' data-bs-target='#exampleModal' 
+            <button type='button' data-bs-toggle='modal' data-bs-target='#foodInputModal' 
             class='addBtn btn btn-success btn-lg fs-3 m-3 rounded-circle'>
                 <i class='fa-solid fa-plus'></i>
             </button>
@@ -72,10 +72,11 @@ $isAdmin = checkAdmin($currentUserId);
         deleteFood
     } from '../../assets/js/foodOperations.js';
 
-    $(document).ready(() => {
-        $('deleteBtn').click(function(e) {
-            let foodId = $(this).parent().parent().data('key');
-            deleteFood(foodId);
-        });
+    $('.deleteBtn').click(function(e) {
+        let foodId = $(this).closest('.foodCard').data('key');
+
+        //Sweet alert
+
+        deleteFood(foodId);
     });
 </script>

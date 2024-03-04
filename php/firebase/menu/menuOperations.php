@@ -6,22 +6,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['operation'])) {
     switch ($operation) {
         case 'add':
             $imgUrl = (isset($_POST['imgUrl']) && !empty($_POST['imgUrl'])) ? $_POST['imgUrl'] : __DIR__ . '/../../../assets/images/Image-Input.jpg';
-            $foodName = isset($_POST['foodName']) ? $_POST['foodName'] : '';
-            $foodQuantity = isset($_POST['foodQuantity']) ? $_POST['foodQuantity'] : '';
-            $foodPrice = isset($_POST['foodPrice']) ? $_POST['foodPrice'] : '';
+            $foodName = isset($_POST['name']) ? $_POST['name'] : '';
+            $foodQuantity = isset($_POST['quantity']) ? $_POST['quantity'] : '';
+            $foodPrice = isset($_POST['price']) ? $_POST['price'] : '';
 
             echo addMenu($foodName, $foodQuantity, $foodPrice, $imgUrl);
             break;
 
         case 'edit':
-            if (isset($_POST['foodKey'])) {
-                $foodKey = $_POST['foodKey'];
-                editMenu($foodKey);
-            }
+            $foodId = isset($_POST['foodId']) ? $_POST['foodId'] : '';
+            $imgUrl = (isset($_POST['imgUrl']) && !empty($_POST['imgUrl'])) ? $_POST['imgUrl'] : __DIR__ . '/../../../assets/images/Image-Input.jpg';
+            $foodName = isset($_POST['name']) ? $_POST['name'] : '';
+            $foodQuantity = isset($_POST['quantity']) ? $_POST['quantity'] : '';
+            $foodPrice = isset($_POST['price']) ? $_POST['price'] : '';
+
+            echo editMenu($foodId, $imgUrl, $foodName, $foodQuantity, $foodPrice);
             break;
 
         case 'delete':
-            $foodId = isset($_POST['key']) ? $_POST['key'] : "";
+            $foodId = isset($_POST['foodId']) ? $_POST['foodId'] : "";
             echo deleteMenu($foodId);
             break;
 
@@ -148,21 +151,18 @@ function deleteMenu($foodId)
     curl_close($ch);
 }
 
-function editMenu($foodKey)
+function editMenu($foodKey, $foodImage, $foodName, $foodQuantity, $foodPrice)
 {
     $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
     $projectId = 'cms-08-02-2024';
     $collection = 'menu';
     $url = "https://firestore.googleapis.com/v1/projects/{$projectId}/databases/(default)/documents/{$collection}/{$foodKey}?key={$apiKey}";
 
-    if (isset($_POST['foodName']) && !empty($_POST['foodName'])) {
-        $foodName = $_POST['foodName'];
-        $foodQuantity = $_POST['foodQuantity'];
-        $foodPrice = $_POST['foodPrice'];
-    }
-
-    $data = [
+    $data = json_encode([
         "fields" => [
+            "imgUrl" => [
+                "stringValue" => $foodImage,
+            ],
             "name" => [
                 "stringValue" => $foodName,
             ],
@@ -173,15 +173,13 @@ function editMenu($foodKey)
                 "stringValue" => $foodPrice,
             ]
         ]
-    ];
-
-    $dataJson = json_encode($data);
+    ]);
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $dataJson);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
         "Content-Type: application/json",
     ));

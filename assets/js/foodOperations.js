@@ -27,3 +27,18 @@ export function deleteFood(foodId) {
         },
     });
 }
+
+export function editFood(foodId, newFoodData) {
+    $.ajax({
+        url: "../../php/firebase/menu/menuOperations.php",
+        type: "POST",
+        data: { 'operation': 'edit', 'foodId': foodId, ...newFoodData },
+        dataType: "application/json",
+        success: function (response) {
+            console.log(response);
+        },
+        error: function (error) {
+            console.log("error: " + error.responseText);
+        },
+    });
+}

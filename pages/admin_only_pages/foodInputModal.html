@@ -1,0 +1,103 @@
+<div class="modal fade" id="foodInputModal" tabindex="-1" aria-labelledby="foodInputModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="POST" id="foodInputForm" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Add Item</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body d-flex justify-content-center">
+                    <div class='foodCardInput card col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 m-3'
+                        style='width: 15rem;'>
+                        <input class="imageInputElement" type="file" accept="image/*" name="imgUrl"
+                            style="display: none;">
+                        <img src="../../assets/images/Image-Input.jpg" style="aspect-ratio: 1/1;"
+                            class="foodImageInput card-img-top py-2 fa-8x d-flex align-items-center justify-content-center">
+                        <div class='card-body'>
+                            <div class='card-title'>
+                                <input class="foodNameInput custom-input" placeholder="Enter the food name"
+                                    name="foodName" style="width:100%;">
+                            </div>
+                            <div class='hstack gap-2'>
+                                <div class='card-text'>Quantity: <input class="foodQuantityInput w-100"
+                                        name="foodQuantity">
+                                </div>
+                                <vr class='vr'></vr>
+                                <div class='card-text'>Price: Rs. <input class="foodPriceInput w-100" name="foodPrice">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" id="foodInputSubmit" class="btn btn-primary" data-bs-dismiss="modal">Add
+                        Item</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="module" defer>
+    import { addFood, editFood } from '../../assets/js/foodOperations.js';
+
+    $(document).ready(function () {
+        var isEdit = false;
+        var clickedFoodId = '';
+
+        $('.foodImageInput').click(() => {
+            $('.imageInputElement').click();
+        });
+
+        $('.imageInputElement').change((e) => {
+            const file = e.target.files[0];
+            let fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+            fileReader.onload = function () {
+                $('.foodImageInput').attr('src', fileReader.result);
+            }
+        });
+
+        $('.editBtn').click(function (e) {
+            $('#modalTitle').text('Edit Item');
+            $('#foodInputSubmit').text('Save Changes');
+
+            clickedFoodId = $(this).closest('.foodCard').data('key');
+
+            let currentImageSrc = $(this).closest('.foodImage').attr('src');
+            let currentName = $(this).closest('.foodName').text().trim();
+            let currentQuantity = $(this).closest('.foodQuantity').text().trim();
+            let currentPrice = $(this).closest('.foodPrice').text().trim();
+
+            $('.foodImageInput').attr('src', currentImageSrc);
+            $('.foodNameInput').val(currentName);
+            $('.foodQuantityInput').val(currentQuantity);
+            $('.foodPriceInput').val(currentPrice);
+
+            $('#foodInputModal').modal('show');
+
+            isEdit = true;
+        });
+
+        $('#foodInputForm').submit(function (e) {
+            e.preventDefault();
+            let formData = {
+                'imgUrl': $('.foodImageInput').attr('src'),
+                'name': $('.foodNameInput').val(),
+                'quantity': $('.foodQuantityInput').val(),
+                'price': $('.foodPriceInput').val()
+            };
+
+            if (isEdit) {
+                editFood(clickedFoodId, formData);
+            } else {
+                addFood(formData);
+            }
+
+        });
+    });
+
+</script>
