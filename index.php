@@ -42,7 +42,7 @@
 
 <body>
   <?php
-  require_once "php/firebase/users/sessionManagement.php";
+  require_once "php/general/sessionManagement.php";
   require_once "php/firebase/users/userOperations.php";
   require_once "php/general/loadContent.php";
 
@@ -51,6 +51,9 @@
   if ($loginStatus['isLoggedIn'] == 'true') {
     $isAdmin = checkAdmin(getCurrentUserIdFromSession());
     $defaultPage = ($isAdmin == 'true') ? 'orders' : 'home';
+    if ($defaultPage == 'orders') {
+      echo "<style>$('body').css('background', '#ffffff')</style>";
+    }
   }
 
   $sessionExpiredAlert = "

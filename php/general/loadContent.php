@@ -1,6 +1,6 @@
 <?php
 
-if (isset($_POST['page'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['page'])) {
     $pageName = $_POST['page'];
     loadPage($pageName);
 }

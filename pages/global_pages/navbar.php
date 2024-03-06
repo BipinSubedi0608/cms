@@ -1,5 +1,5 @@
 <?php
-include_once __DIR__ . '/../../php/firebase/users/sessionManagement.php';
+include_once __DIR__ . '/../../php/general/sessionManagement.php';
 include_once __DIR__ . '/../../php/firebase/users/userOperations.php';
 
 $currentUserId = getCurrentUserIdFromSession();

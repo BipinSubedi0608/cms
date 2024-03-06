@@ -61,16 +61,30 @@
             }
         });
 
+        $('.addBtn').click(function (e) {
+            $('#modalTitle').text('Add Item');
+            $('#foodInputSubmit').text('Add Item');
+
+            $('.foodImageInput').attr('src', "../../assets/images/Image-Input.jpg");
+            $('.foodNameInput').val("");
+            $('.foodQuantityInput').val("");
+            $('.foodPriceInput').val("");
+
+            $('#foodInputModal').modal('show');
+
+            isEdit = false;
+        })
+
         $('.editBtn').click(function (e) {
             $('#modalTitle').text('Edit Item');
             $('#foodInputSubmit').text('Save Changes');
 
             clickedFoodId = $(this).closest('.foodCard').data('key');
 
-            let currentImageSrc = $(this).closest('.foodImage').attr('src');
-            let currentName = $(this).closest('.foodName').text().trim();
-            let currentQuantity = $(this).closest('.foodQuantity').text().trim();
-            let currentPrice = $(this).closest('.foodPrice').text().trim();
+            let currentImageSrc = $(this).closest('.foodCard').children('.foodImage').attr('src');
+            let currentName = $(this).parent().siblings('.foodName').text().trim();
+            let currentQuantity = $(this).parent().siblings('.foodDetailsContainer').find('.foodQuantity').text().trim();
+            let currentPrice = $(this).parent().siblings('.foodDetailsContainer').find('.foodPrice').text().trim();
 
             $('.foodImageInput').attr('src', currentImageSrc);
             $('.foodNameInput').val(currentName);

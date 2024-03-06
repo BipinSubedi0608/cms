@@ -4,6 +4,13 @@ import togglePassword from './togglePassword.js';
 
 $(document).ready(function () {
 
+  var currentPage = localStorage.getItem('currentPage');
+  if (currentPage != null) {
+    loadPageInRootContainer(currentPage);
+    $('.active').removeClass("active");
+    $(`.navbarBtn[data-page="${currentPage}"]`).addClass("active");
+  }
+
   $("#loginForm").submit(function (e) {
     e.preventDefault();
     let formData = {};
@@ -31,10 +38,12 @@ $(document).ready(function () {
 
   $('.navbarBtn').click(function (e) {
     e.preventDefault();
-    var page = $(this).data('page');
+    currentPage = $(this).data('page');
+    localStorage.setItem('currentPage', currentPage);
+
     $('.active').removeClass("active");
     $(this).addClass('active');
-    loadPageInRootContainer(page);
+    loadPageInRootContainer(currentPage);
   });
 
   $('.profileBtn').click(function (e) {

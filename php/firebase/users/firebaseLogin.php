@@ -1,6 +1,6 @@
 <?php
 
-include "sessionManagement.php";
+include __DIR__ . "/../../general/sessionManagement.php";
 
 function firebaseLogin($email, $password)
 {

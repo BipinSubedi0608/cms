@@ -54,6 +54,7 @@ export function loginCall(formData) {
 }
 
 export function logoutCall() {
+    localStorage.removeItem('currentPage');
     $.ajax({
         url: '../../php/general/login.php',
         type: 'POST',

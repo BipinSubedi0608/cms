@@ -1,7 +1,7 @@
 <?php
 include '../../php/firebase/menu/menuOperations.php';
 include '../../php/firebase/users/userOperations.php';
-include '../../php/firebase/users/sessionManagement.php';
+include '../../php/general/sessionManagement.php';
 
 $foods = json_decode(getEntireMenu(), true);
 $currentUserId = getCurrentUserIdFromSession();
