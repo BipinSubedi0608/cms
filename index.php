@@ -48,14 +48,6 @@
 
   $loginStatus = json_decode(checkSession(), true);
 
-  if ($loginStatus['isLoggedIn'] == 'true') {
-    $isAdmin = checkAdmin(getCurrentUserIdFromSession());
-    $defaultPage = ($isAdmin == 'true') ? 'orders' : 'home';
-    if ($defaultPage == 'orders') {
-      echo "<style>$('body').css('background', '#ffffff')</style>";
-    }
-  }
-
   $sessionExpiredAlert = "
     <script>
       Swal.fire({
@@ -73,13 +65,15 @@
     </script>
   ";
 
-
   //Conditional Rendering for Login Status
   if ($loginStatus['isLoggedIn'] == 'true') {
+    $isAdmin = checkAdmin(getCurrentUserIdFromSession());
+    $lastPage = getCurrentPage();
+    $defaultPage = (isset($lastPage)) ? $lastPage : (($isAdmin == 'true') ? 'orders' : 'home');
+
     refreshSession();
     require "pages/global_pages/navbar.php";
   } else {
-
     loadPage('login');
     if ($loginStatus['message'] == 'Session Expired') {
       echo $sessionExpiredAlert;
@@ -87,9 +81,12 @@
   }
   ?>
 
-  <div id="root">
-    <?php if ($loginStatus['isLoggedIn'] == 'true') loadPage($defaultPage) ?>
-  </div>
+  <div id="root"></div>
+
+  <script type="module">
+    import loadPageInRootContainer from './assets/js/loadPage.js';
+    <?php if ($loginStatus['isLoggedIn'] == 'true') echo "loadPageInRootContainer('$defaultPage')"; ?>
+  </script>
 </body>
 
 </html>

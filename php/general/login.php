@@ -2,6 +2,7 @@
 
 include "../firebase/users/firebaseLogin.php";
 include "../firebase/users/userOperations.php";
+include "./loadContent.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['operation'])) {
 
@@ -40,5 +41,6 @@ function login($email, $password)
 function logout()
 {
     firebaseLogout();
+    removeCurrentPage();
     echo "Logout succesful";
 }

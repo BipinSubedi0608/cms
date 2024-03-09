@@ -1,6 +1,6 @@
 <?php
-include '../../php/firebase/users/userOperations.php';
-include '../../php/general/sessionManagement.php';
+include_once '../../php/firebase/users/userOperations.php';
+include_once '../../php/general/sessionManagement.php';
 
 $currentUserId = getCurrentUserIdFromSession();
 $currentUser = json_decode(getUser($currentUserId), true);

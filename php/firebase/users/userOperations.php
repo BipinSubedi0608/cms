@@ -43,7 +43,7 @@ function getUser($userId, $requirePassword = false)
 
 function getUserPassword($userId)
 {
-    $currentUser = json_decode(getUser($userId, 'true'), true);
+    $currentUser = json_decode(getUser($userId, true), true);
     return json_encode($currentUser['credentials']['password']);
 }
 

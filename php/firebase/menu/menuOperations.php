@@ -1,5 +1,6 @@
 <?php
 
+include_once __DIR__ . "/../../general/sessionManagement.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['operation'])) {
     $operation = $_POST['operation'];
@@ -47,6 +48,7 @@ function getEntireMenu()
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
     $response = curl_exec($ch);
     $responseArray = json_decode($response, true)['documents'];
 
@@ -67,6 +69,76 @@ function getEntireMenu()
             'quantity' =>  $responseArray[$i]['fields']['quantity']['stringValue'],
             'imgUrl' =>  $responseArray[$i]['fields']['imgUrl']['stringValue']
         ];
+    }
+
+    return json_encode($documents);
+}
+
+
+
+function getFilteredMenu($lastCheckedTime)
+{
+    $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
+    $projectId = 'cms-08-02-2024';
+    $collection = 'menu';
+    $url = "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents:runQuery?key=$apiKey";
+
+    $documents = array();
+
+    $queryParams = [
+        "structuredQuery" => [
+            "from" => [[
+                "collectionId" => $collection,
+                "allDescendants" => true
+            ]],
+
+            "where" => [
+                "fieldFilter" => [
+                    "field" => [
+                        "fieldPath" => 'lastUpdatedTime'
+                    ],
+                    "op" => "GREATER_THAN_OR_EQUAL",
+                    "value" => [
+                        "stringValue" => $lastCheckedTime,
+                    ]
+                ]
+            ]
+        ]
+    ];
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($queryParams));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+    ]);
+
+    $response = curl_exec($ch);
+    $responseArray = json_decode($response, true);
+
+    if (curl_errno($ch)) {
+        return ('Error: ' . curl_error($ch));
+    }
+
+    curl_close($ch);
+
+    $i = 0;
+    foreach ($responseArray as $document) {
+        $doc = $document['document'];
+
+        $temp = explode('/', $doc['name']);
+
+        $documents[$i] = [
+            'id' => end($temp),
+            'name' =>  $doc['fields']['name']['stringValue'],
+            'price' =>  $doc['fields']['price']['stringValue'],
+            'quantity' =>  $doc['fields']['quantity']['stringValue'],
+            'imgUrl' =>  $doc['fields']['imgUrl']['stringValue'],
+            'lastUpdatedTime' =>  $doc['fields']['lastUpdatedTime']['stringValue'],
+        ];
+        $i++;
     }
 
     return json_encode($documents);
@@ -150,6 +222,8 @@ function deleteMenu($foodId)
 
     curl_close($ch);
 }
+
+
 
 function editMenu($foodKey, $foodImage, $foodName, $foodQuantity, $foodPrice)
 {

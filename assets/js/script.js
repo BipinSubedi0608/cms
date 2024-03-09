@@ -1,15 +1,18 @@
-import loadPageInRootContainer from "./loadPage.js";
+import loadPageInRootContainer, { getCurrentPage } from "./loadPage.js";
 import { loginCall, logoutCall } from "./login.js";
 import togglePassword from './togglePassword.js';
 
-$(document).ready(function () {
+$(document).ready(async function () {
 
-  var currentPage = localStorage.getItem('currentPage');
-  if (currentPage != null) {
-    loadPageInRootContainer(currentPage);
-    $('.active').removeClass("active");
-    $(`.navbarBtn[data-page="${currentPage}"]`).addClass("active");
+  try {
+    var currentPage = await getCurrentPage();
+  } catch (e) {
+    console.log('Error' + e);
   }
+
+  $("#test").click(async function () {
+    console.log(await getCurrentPage());
+  });
 
   $("#loginForm").submit(function (e) {
     e.preventDefault();
@@ -39,10 +42,6 @@ $(document).ready(function () {
   $('.navbarBtn').click(function (e) {
     e.preventDefault();
     currentPage = $(this).data('page');
-    localStorage.setItem('currentPage', currentPage);
-
-    $('.active').removeClass("active");
-    $(this).addClass('active');
     loadPageInRootContainer(currentPage);
   });
 

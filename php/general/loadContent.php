@@ -1,12 +1,29 @@
 <?php
 
+include_once __DIR__ . "/sessionManagement.php";
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['page'])) {
     $pageName = $_POST['page'];
     loadPage($pageName);
 }
 
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['operation'])) {
+    switch ($_GET['operation']) {
+        case 'get':
+            echo getCurrentPage();
+            break;
+        case 'delete':
+            removeCurrentPage();
+            break;
+        default:
+            echo "Invalid Operation";
+            break;
+    }
+}
+
 function loadPage($page)
 {
+    $_SESSION['currentPage'] = $page;
     switch ($page) {
             //Global Pages
         case 'login':
@@ -40,4 +57,14 @@ function loadPage($page)
             require __DIR__ . "/../../pages/global_pages/errorPage.html";
             break;
     }
+}
+
+function getCurrentPage()
+{
+    return $_SESSION['currentPage'];
+}
+
+function removeCurrentPage()
+{
+    $_SESSION['currentPage'] = null;
 }

@@ -7,10 +7,6 @@
 
 
 /* Home.css Starts */
-body {
-  background: url(../images/Home-Background.jpg);
-}
-
 .homeHeader {
   font-family: 'Dancing Script', cursive;
   font-size: 4.25rem !important;

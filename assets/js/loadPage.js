@@ -2,12 +2,14 @@ import loader from '../../pages/global_pages/loadingComponent.js';
 
 export default function loadPageInRootContainer(page) {
     $('body').append(loader);
+    $('.active').removeClass("active");
+    $(`.navbarBtn[data-page=${page}]`).addClass("active");
 
     $.ajax({
         url: '../../php/general/loadContent.php',
         type: 'POST',
         data: { page: page },
-        success: function (response) {
+        success: async function (response) {
             $('body .loader').remove();
             if (page == 'login') {
                 $('body').html(response);
@@ -38,4 +40,21 @@ function loadBackground(page) {
     }
 
     $('body').css('background', backgroundData);
+}
+
+export async function getCurrentPage() {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: '../../php/general/loadContent.php',
+            type: 'GET',
+            data: { 'operation': 'get' },
+            success: function (response) {
+                resolve(response);
+            },
+            error: function (error) {
+                console.log(`Error ${error.status}: ${error.statusText}`);
+                reject(error.statusText);
+            }
+        });
+    });
 }
