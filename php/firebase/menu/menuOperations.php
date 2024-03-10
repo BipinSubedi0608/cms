@@ -61,17 +61,58 @@ function getEntireMenu()
     for ($i = 0; $i <  count($responseArray); $i++) {
         $temp = explode('/', $responseArray[$i]['name']);
         if (end($temp) == 'iBRHonTyDScRSfJUcYJs') continue; //Placeholder document is skipped
+        if ($responseArray[$i]['fields']['isDeleted']['stringValue'] == 'true')  continue; //Deleted documents are skipped
 
         $documents[$i] = [
             'id' => end($temp),
             'name' =>  $responseArray[$i]['fields']['name']['stringValue'],
             'price' =>  $responseArray[$i]['fields']['price']['stringValue'],
             'quantity' =>  $responseArray[$i]['fields']['quantity']['stringValue'],
-            'imgUrl' =>  $responseArray[$i]['fields']['imgUrl']['stringValue']
+            'imgUrl' =>  $responseArray[$i]['fields']['imgUrl']['stringValue'],
+            'lastUpdatedTime' => $responseArray[$i]['fields']['lastUpdatedTime']['stringValue'],
+            'isDeleted' => $responseArray[$i]['fields']['isDeleted']['stringValue'],
         ];
     }
 
     return json_encode($documents);
+}
+
+
+
+function getFoodWithId($foodId)
+{
+    $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
+    $projectId = 'cms-08-02-2024';
+    $collection = 'menu';
+    $url = "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents/$collection/$foodId?key=$apiKey";
+    $food = array();
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+    $response = curl_exec($ch);
+    $responseArray = json_decode($response, true);
+
+    if (curl_errno($ch)) {
+        return ('Error: ' . curl_error($ch));
+    }
+
+    curl_close($ch);
+
+    $temp = explode('/', $responseArray['name']);
+
+    $food = [
+        'id' => end($temp),
+        'name' =>  $responseArray['fields']['name']['stringValue'],
+        'price' =>  $responseArray['fields']['price']['stringValue'],
+        'quantity' =>  $responseArray['fields']['quantity']['stringValue'],
+        'imgUrl' =>  $responseArray['fields']['imgUrl']['stringValue'],
+        'lastUpdatedTime' => $responseArray['fields']['lastUpdatedTime']['stringValue'],
+        'isDeleted' => $responseArray['fields']['isDeleted']['stringValue'],
+    ];
+
+    return json_encode($food);
 }
 
 
@@ -99,7 +140,7 @@ function getFilteredMenu($lastCheckedTime)
                     ],
                     "op" => "GREATER_THAN_OR_EQUAL",
                     "value" => [
-                        "stringValue" => $lastCheckedTime,
+                        "stringValue" => "$lastCheckedTime",
                     ]
                 ]
             ]
@@ -124,21 +165,28 @@ function getFilteredMenu($lastCheckedTime)
 
     curl_close($ch);
 
-    $i = 0;
-    foreach ($responseArray as $document) {
-        $doc = $document['document'];
+    // return json_encode($responseArray);
 
-        $temp = explode('/', $doc['name']);
+    if (count($responseArray) > 1) {
+        $i = 0;
+        foreach ($responseArray as $document) {
+            $doc = $document['document'];
 
-        $documents[$i] = [
-            'id' => end($temp),
-            'name' =>  $doc['fields']['name']['stringValue'],
-            'price' =>  $doc['fields']['price']['stringValue'],
-            'quantity' =>  $doc['fields']['quantity']['stringValue'],
-            'imgUrl' =>  $doc['fields']['imgUrl']['stringValue'],
-            'lastUpdatedTime' =>  $doc['fields']['lastUpdatedTime']['stringValue'],
-        ];
-        $i++;
+            $temp = explode('/', $doc['name']);
+
+            if (end($temp) == 'iBRHonTyDScRSfJUcYJs') continue; //Placeholder document is skipped
+
+            $documents[$i] = [
+                'id' => end($temp),
+                'name' =>  $doc['fields']['name']['stringValue'],
+                'price' =>  $doc['fields']['price']['stringValue'],
+                'quantity' =>  $doc['fields']['quantity']['stringValue'],
+                'imgUrl' =>  $doc['fields']['imgUrl']['stringValue'],
+                'lastUpdatedTime' =>  $doc['fields']['lastUpdatedTime']['stringValue'],
+                'isDeleted' => $doc['fields']['isDeleted']['stringValue'],
+            ];
+            $i++;
+        }
     }
 
     return json_encode($documents);
@@ -155,10 +203,24 @@ function addMenu($foodName, $foodQuantity, $foodPrice, $imageURL)
 
     $foodData = json_encode([
         "fields" => [
-            "name" => ["stringValue" => $foodName],
-            "quantity" => ["stringValue" => $foodQuantity],
-            "price" => ["stringValue" => $foodPrice],
-            "imgUrl" => ["stringValue" => $imageURL],
+            "name" => [
+                "stringValue" => $foodName
+            ],
+            "quantity" => [
+                "stringValue" => $foodQuantity
+            ],
+            "price" => [
+                "stringValue" => $foodPrice
+            ],
+            "imgUrl" => [
+                "stringValue" => $imageURL
+            ],
+            "isDeleted" => [
+                "stringValue" => 'false'
+            ],
+            "lastUpdatedTime" => [
+                "stringValue" => time()
+            ],
         ]
     ]);
 
@@ -200,26 +262,52 @@ function deleteMenu($foodId)
     $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
     $projectId = 'cms-08-02-2024';
     $collection = 'menu';
-    $url = "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents/$collection/$foodId?key=$apiKey";
+    $url = "https://firestore.googleapis.com/v1/projects/{$projectId}/databases/(default)/documents/{$collection}/{$foodId}?key={$apiKey}";
 
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $foodToBeDeleted = getFoodWithId($foodId);
+
+    $data = json_encode([
+        "fields" => [
+            "imgUrl" => [
+                "stringValue" => $foodToBeDeleted['imgUrl'],
+            ],
+            "name" => [
+                "stringValue" => $foodToBeDeleted['name'],
+            ],
+            "quantity" => [
+                "stringValue" => $foodToBeDeleted['quantity'],
+            ],
+            "price" => [
+                "stringValue" => $foodToBeDeleted['price'],
+            ],
+            "isDeleted" => [
+                "stringValue" => 'true',
+            ],
+            "lastUpdatedTime" => [
+                "stringValue" => time(),
+            ],
+        ]
+    ]);
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        "Content-Type: application/json",
+    ));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
     $response = curl_exec($ch);
 
     if ($response === false) {
-        echo 'Error: ' . curl_error($ch);
+        echo "Error: " . curl_error($ch);
     } else {
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        if ($http_code == 200) {
-            return "Document with ID {$foodId} deleted successfully.";
-        } else {
-            return "Error deleting document. HTTP code: {$http_code}";
-        }
+        return "Document deleted successfully!";
     }
 
+    // Close cURL session
     curl_close($ch);
 }
 
@@ -245,7 +333,13 @@ function editMenu($foodKey, $foodImage, $foodName, $foodQuantity, $foodPrice)
             ],
             "price" => [
                 "stringValue" => $foodPrice,
-            ]
+            ],
+            "isDeleted" => [
+                "stringValue" => 'false',
+            ],
+            "lastUpdatedTime" => [
+                "stringValue" => time(),
+            ],
         ]
     ]);
 

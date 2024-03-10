@@ -5,6 +5,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Rosarivo&display=swap');
 
+body{
+  background-color: #eaeaea;
+}
 
 /* Home.css Starts */
 .homeHeader {
@@ -15,12 +18,12 @@
   font-weight: 800;
 }
 
-p {
+/* p {
   font-family: "Recursive", sans-serif;
   color: #f5f5f5;
   font-size: 1.3rem;
   font-weight: 400;
-}
+} */
 
 .align-center {
   display: flex;

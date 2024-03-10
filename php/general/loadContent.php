@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['operation'])) {
 
 function loadPage($page)
 {
-    $_SESSION['currentPage'] = $page;
+    if ($page != 'login') $_SESSION['currentPage'] = $page;
     switch ($page) {
             //Global Pages
         case 'login':
@@ -46,10 +46,10 @@ function loadPage($page)
 
             //Admin Only Pages
         case 'orders':
-            require __DIR__ . "/../../pages/admin_only_pages/orders.html";
+            require __DIR__ . "/../../pages/admin_only_pages/orders.php";
             break;
         case 'users':
-            require __DIR__ . "/../../pages/admin_only_pages/usersList.html";
+            require __DIR__ . "/../../pages/admin_only_pages/usersList.php";
             break;
 
             //Error Page

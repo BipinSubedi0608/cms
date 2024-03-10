@@ -69,11 +69,13 @@
   if ($loginStatus['isLoggedIn'] == 'true') {
     $isAdmin = checkAdmin(getCurrentUserIdFromSession());
     $lastPage = getCurrentPage();
+    // $lastPage = null;
     $defaultPage = (isset($lastPage)) ? $lastPage : (($isAdmin == 'true') ? 'orders' : 'home');
 
     refreshSession();
     require "pages/global_pages/navbar.php";
   } else {
+    $_SESSION['currentPage'] = null;
     loadPage('login');
     if ($loginStatus['message'] == 'Session Expired') {
       echo $sessionExpiredAlert;
