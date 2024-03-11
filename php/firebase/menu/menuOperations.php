@@ -219,7 +219,7 @@ function addMenu($foodName, $foodQuantity, $foodPrice, $imageURL)
                 "stringValue" => 'false'
             ],
             "lastUpdatedTime" => [
-                "stringValue" => time()
+                "stringValue" => (string) time()
             ],
         ]
     ]);
@@ -284,7 +284,7 @@ function deleteMenu($foodId)
                 "stringValue" => 'true',
             ],
             "lastUpdatedTime" => [
-                "stringValue" => time(),
+                "stringValue" => (string) time(),
             ],
         ]
     ]);
@@ -338,7 +338,7 @@ function editMenu($foodKey, $foodImage, $foodName, $foodQuantity, $foodPrice)
                 "stringValue" => 'false',
             ],
             "lastUpdatedTime" => [
-                "stringValue" => time(),
+                "stringValue" => (string) time(),
             ],
         ]
     ]);

@@ -42,18 +42,3 @@ export function editFood(foodId, newFoodData) {
         },
     });
 }
-
-export function placeOrder(foodId) {
-    $.ajax({
-        type: "POST",
-        url: "../../php/firebase/menu/orderOperations.php",
-        data: { 'operation': 'create', 'foodId': foodId },
-        dataType: "application/json",
-        success: function (response) {
-            console.log(response);
-        },
-        error: function (error) {
-            console.log("error: " + error.responseText);
-        },
-    });
-}

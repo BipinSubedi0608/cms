@@ -8,7 +8,8 @@ $isAdmin = checkAdmin($currentUserId);
 
 function cardComponent($foodData)
 {
-    global $isAdmin;
+    $currentUserId = getCurrentUserIdFromSession();
+    $isAdmin = checkAdmin($currentUserId);
     return "
     <div data-key={$foodData['id']} class='foodCard card col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 m-3' style='width: 15rem;'>
         <img class='foodImage card-img-top py-2' src='{$foodData['imgUrl']}' alt='Card image cap'>
@@ -101,8 +102,11 @@ function cardComponent($foodData)
 
 <script type="module">
     import {
-        deleteFood, placeOrder
+        deleteFood,
     } from '../../assets/js/foodOperations.js';
+    import {
+        placeOrder,
+    } from '../../assets/js/orderOperations.js';
 
     $('.deleteBtn').click(function(e) {
         let foodId = $(this).closest('.foodCard').data('key');

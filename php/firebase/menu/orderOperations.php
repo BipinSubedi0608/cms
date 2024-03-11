@@ -6,11 +6,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['operation'])) {
             echo createOrder($_POST['foodId']);
             break;
 
+        case 'get':
+            echo getOrderWithId($_POST['orderId']);
+            break;
+
+        case 'confirm':
+            echo confirmOrder($_POST['orderId']);
+            break;
+
         default:
             echo "Invalid Operation";
             break;
     }
 }
+
+
 
 function getAllOrders()
 {
@@ -144,4 +154,60 @@ function createOrder($foodId)
     ];
 
     return json_encode($orderDetails);
+}
+
+
+
+function confirmOrder($orderId)
+{
+    $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
+    $projectId = 'cms-08-02-2024';
+    $collection = 'orders';
+    $url = "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents/$collection/$orderId?key=$apiKey";
+
+    $orderDetails = json_decode(getOrderWithId($orderId), true);
+
+    // Fields to update
+    $updatedOrderDetails = json_encode([
+        "fields" => [
+            "studentId" => [
+                "stringValue" => $orderDetails['studentId'],
+            ],
+            "foodId" => [
+                "stringValue" => $orderDetails['foodId'],
+            ],
+            "orderTime" => [
+                "stringValue" => $orderDetails['orderTime'],
+            ],
+            "isBought" => [
+                "stringValue" => 'true',
+            ],
+        ]
+    ]);
+
+    // Initialize cURL session
+    $ch = curl_init($url);
+
+    // Set cURL options
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $updatedOrderDetails);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "Content-Type: application/json",
+    ]);
+
+    // Execute cURL session and get the response
+    $response = curl_exec($ch);
+
+    // Check for cURL errors
+    if (curl_errno($ch)) {
+        echo 'Curl error: ' . curl_error($ch);
+    }
+
+    // Close cURL session
+    curl_close($ch);
+
+    // Display the response
+    return $response;
 }
