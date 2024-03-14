@@ -30,7 +30,7 @@ $orders = json_decode(getAllOrders(), true);
                             <p class="card-text text-dark">Price: Rs. <?php echo $orderedFood['price']; ?></p>
                             <p class="card-text mb-0"><small class="text-muted">Ordered by: <?php echo $orderedUser['name']; ?></small></p>
                             <p class="card-text"><small class="text-muted">Order time: <?php echo $orderedTime; ?></small></p>
-                            <?php if ($order['isBought'] == 'true') echo "Bought"; ?>
+                            <!-- <?php if ($order['isBought'] == 'true') echo "Bought"; ?> -->
                         </div>
                     </div>
                 </div>

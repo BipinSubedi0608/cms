@@ -6,10 +6,8 @@ $foods = json_decode(getEntireMenu(), true);
 $currentUserId = getCurrentUserIdFromSession();
 $isAdmin = checkAdmin($currentUserId);
 
-function cardComponent($foodData)
+function cardComponent($foodData, $isAdmin)
 {
-    $currentUserId = getCurrentUserIdFromSession();
-    $isAdmin = checkAdmin($currentUserId);
     return "
     <div data-key={$foodData['id']} class='foodCard card col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-12 m-3' style='width: 15rem;'>
         <img class='foodImage card-img-top py-2' src='{$foodData['imgUrl']}' alt='Card image cap'>
@@ -64,7 +62,7 @@ function cardComponent($foodData)
 
         <?php
         foreach ($foods as $food) {
-            echo cardComponent($food);
+            echo cardComponent($food, $isAdmin);
         }
 
         ?>
@@ -81,18 +79,18 @@ function cardComponent($foodData)
 //                         $('.foodCard[data-key=\"{$food['id']}\"]').remove();
 //                     </script>";
 //             } else {
-//                 // echo "<script>
-//                 //         var updatedCard = $('.navbarBtn[data-key=\"{$food['id']}\"]');
-//                 //         updatedCard.find('.foodImage').attr('src','{$food['imgUrl']}');
-//                 //         updatedCard.find('.foodName').text({$food['name']});
-//                 //         updatedCard.find('.foodPrice').text({$food['price']});
-//                 //         updatedCard.find('.foodQuantity').text({$food['quantity']});
-//                 //     </script>";
+//                 echo "<script>
+//                         var updatedCard = $('.navbarBtn[data-key=\"{$food['id']}\"]');
+//                         updatedCard.find('.foodImage').attr('src','{$food['imgUrl']}');
+//                         updatedCard.find('.foodName').text({$food['name']});
+//                         updatedCard.find('.foodPrice').text({$food['price']});
+//                         updatedCard.find('.foodQuantity').text({$food['quantity']});
+//                     </script>";
 
 //                 echo "<script>
 //                     $('.foodCard[data-key=\"{$food['id']}\"]').remove();
 //                 </script>";
-//                 echo cardComponent($food);
+//                 echo cardComponent($food, $isAdmin);
 //             }
 //         }
 //     }

@@ -10,10 +10,6 @@ $(document).ready(async function () {
     console.log('Error' + e);
   }
 
-  $("#test").click(async function () {
-    console.log(await getCurrentPage());
-  });
-
   $("#loginForm").submit(function (e) {
     e.preventDefault();
     let formData = {};

@@ -40,6 +40,11 @@ function getCurrentUserIdFromSession()
     return $_SESSION['currentUser']['id'];
 }
 
+function getCurrentUserTokenFromSession()
+{
+    return $_SESSION['currentUser']['idToken'];
+}
+
 function destroySession()
 {
     session_unset();

@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') :
                         <div class="col">
                             <h4 class="text-center mb-3">Student Details</h4>
                             <div class="card">
-                                <img src="../../assets/images/Default-Profile.png" class="card-img-top img-thumbnail" alt="...">
+                                <img style="aspect-ratio: 1/1;" src="../../assets/images/Default-Profile.png" class="card-img-top img-thumbnail" alt="...">
                                 <div class="card-body">
                                     <div class="vstack gap-2">
                                         <p class="m-0">Name: <?php echo $orderedUser['name'] ?></p>
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') :
                         <div class="col">
                             <h4 class="text-center mb-3">Food Details</h4>
                             <div class="card">
-                                <img src="<?php echo $orderedFood['imgUrl'] ?>" class="card-img-top img-thumbnail" alt="...">
+                                <img style="aspect-ratio: 1/1;" src="<?php echo $orderedFood['imgUrl'] ?>" class="card-img-top img-thumbnail" alt="...">
                                 <div class="card-body">
                                     <div class="vstack gap-2">
                                         <p class="m-0">Name: <?php echo $orderedFood['name'] ?></p>

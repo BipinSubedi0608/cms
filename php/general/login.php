@@ -1,6 +1,6 @@
 <?php
 
-include "../firebase/users/firebaseLogin.php";
+include "../firebase/users/firebaseAuth.php";
 include "../firebase/users/userOperations.php";
 include "./loadContent.php";
 
@@ -9,9 +9,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['operation'])) {
     if ($_POST['operation'] == 'login') {
         $email = isset($_POST["email"]) ? validate($_POST['email']) : "";
         $password = isset($_POST["password"]) ? validate($_POST['password']) : "";
-        login($email, $password);
+        echo login($email, $password);
     } else if ($_POST['operation'] == 'logout') {
-        logout();
+        echo logout();
     } else {
         echo "Invalid Operation.";
     }
@@ -29,9 +29,9 @@ function login($email, $password)
 {
     $response = json_decode(firebaseLogin($email, $password), true);
     if ($response['status'] == '200') {
-        echo getUser($response['userId']);
+        return getUser($response['userInfo']['id']);
     } else {
-        echo json_encode([
+        return json_encode([
             'status' => $response['status'],
             'message' => $response['message'],
         ]);
@@ -42,5 +42,5 @@ function logout()
 {
     firebaseLogout();
     removeCurrentPage();
-    echo "Logout succesful";
+    return "Logout succesful";
 }

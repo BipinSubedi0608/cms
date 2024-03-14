@@ -4,9 +4,9 @@ export function loginCall(formData) {
         html: `<div style="overflow: hidden"><div class="spinner-border"></div></div>`,
         allowOutsideClick: false,
         showConfirmButton: false,
-        onBeforeOpen: () => {
-            Swal.showLoading();
-        },
+        // onBeforeOpen: () => {
+        //     Swal.showLoading();
+        // },
     });
 
     $.ajax({
