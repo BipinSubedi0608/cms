@@ -1,11 +1,5 @@
 <?php
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['operation'])) {
-    if ($_POST['operation'] == 'changePass') {
-        echo updatePassword($_POST['userId'], $_POST['oldPass'], $_POST['newPass']);
-    }
-}
-
 function getUser($userId, $requirePassword = false)
 {
     $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
@@ -21,8 +15,6 @@ function getUser($userId, $requirePassword = false)
 
     $response = curl_exec($ch);
     $responseObj = json_decode($response, true);
-
-    // return $response;
 
     if (curl_errno($ch)) {
         return ('Curl error: ' . curl_error($ch));
@@ -49,98 +41,66 @@ function getUser($userId, $requirePassword = false)
     return json_encode($currentUser);
 }
 
-function updatePassword($userId, $currentPassword, $newPassword)
-{
-    include_once __DIR__ . '/firebaseAuth.php';
-    include_once __DIR__ . '/../../general/sessionManagement.php';
-
-    if ($currentPassword != getUserPassword($userId)) {
-        return json_encode([
-            'status' => '401',
-            'message' => 'Incorrect Old Password',
-        ]);
-    }
-
-    $idToken = getCurrentUserTokenFromSession();
-    $firebaseResponse = json_decode(firebaseUpdatePassword($idToken, $newPassword), true);
-
-    // if (!isset($firebaseResponse['idToken'])) {
-    //     return json_encode($firebaseResponse);
-    // }
-
-    $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
-    $projectId = 'cms-08-02-2024';
-    $collection = 'users';
-    $url = "https://firestore.googleapis.com/v1/projects/{$projectId}/databases/(default)/documents/{$collection}/{$userId}?key={$apiKey}";
-
-    $userData = json_decode(getUser($userId, true), true);
-    $userData['credentials']['password'] = $newPassword;
-
-    $updatedData = [
-        "fields" => []
-    ];
-
-    foreach ($userData as $key => $value) {
-        if ($key == 'id') continue;
-
-        if (is_array($value)) {
-            $fieldToPush = [
-                "$key" => [
-                    "mapValue" => [
-                        "fields" => []
-                    ],
-                ],
-            ];
-            foreach ($value as $subKey => $subValue) {
-                $subFieldToPush = [
-                    "$subKey" => [
-                        "stringValue" => "$subValue"
-                    ],
-                ];
-                $fieldToPush["$key"]["mapValue"]["fields"] = array_merge($fieldToPush["$key"]["mapValue"]["fields"], $subFieldToPush);
-            }
-        } else {
-
-            $fieldToPush = [
-                "$key" => [
-                    "stringValue" => "$value"
-                ],
-            ];
-        }
-        $updatedData["fields"] = array_merge($updatedData["fields"], $fieldToPush);
-    }
-
-    $updatedData = json_encode($updatedData);
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $updatedData);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-        "Content-Type: application/json",
-    ));
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-    $response = curl_exec($ch);
-
-    if ($response === false) {
-        return "Error: " . curl_error($ch);
-    } else {
-        return $firebaseResponse;
-    }
-
-    curl_close($ch);
-}
-
 function getUserPassword($userId)
 {
-    $currentUser = json_decode(getUser($userId, true), true);
-    return $currentUser['credentials']['password'];
+    $currentUser = json_decode(getUser($userId, 'true'), true);
+    return json_encode($currentUser['credentials']['password']);
 }
 
 function checkAdmin($userId)
 {
     $currentUser = json_decode(getUser($userId), true);
     return $currentUser['isAdmin'];
+}
+
+
+function getUserData()
+{
+    $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
+    $projectId = 'cms-08-02-2024';
+    $collection = 'users';
+    $url = "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents/$collection/?key=$apiKey";
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+    $response = curl_exec($ch);
+
+    // Check for cURL errors
+    if (curl_errno($ch)) {
+        echo 'Curl error: ' . curl_error($ch);
+    }
+
+    $responseObj = json_decode($response, true);
+
+    // Check if JSON decoding was successful
+    if ($responseObj === null) {
+        echo 'Error decoding JSON: ';
+    }
+
+    $userDataArray = array();
+
+    foreach ($responseObj['documents'] as $document) {
+        $name = $document['fields']['name']['stringValue'];
+        $isAdmin = $document['fields']['isAdmin']['stringValue'];
+        // Check if name is "admin", if so, continue to the next iteration
+        if ($isAdmin == "true") {
+            continue;
+        }
+        $grade = $document['fields']['grade']['stringValue'];
+        $student_id = $document['fields']['std_id']['stringValue'];
+        $faculty = $document['fields']['faculty']['stringValue'];
+        $section = $document['fields']['section']['stringValue'];
+
+        //push data to the array
+        $userDataArray[] = [
+            'name' => $name,
+            'student_id' => $student_id,
+            'grade' => $grade,
+            'faculty' => $faculty,
+            'section' => $section
+        ];
+    }
+    return json_encode($userDataArray);
 }
