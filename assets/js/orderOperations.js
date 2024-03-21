@@ -39,10 +39,10 @@ export async function getOrderFromReference(referenceBy, referenceId) {
         },
         dataType: "application/json",
         success: function (response) {
-            console.log(response);
+            console.log("Success: " + response);
         },
         error: function (error) {
-            console.log("error: " + error.responseText);
+            console.log(error.responseText);
         },
     });
 }

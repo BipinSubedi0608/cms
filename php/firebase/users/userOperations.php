@@ -237,7 +237,7 @@ function getFilteredUser($filterField, $filterValue, $requirePassword = false)
 
     curl_close($ch);
 
-    if (count($responseArray) >= 1) {
+    if (count($responseArray) > 1) {
         $i = 0;
         foreach ($responseArray as $document) {
             $user = $document['document'];

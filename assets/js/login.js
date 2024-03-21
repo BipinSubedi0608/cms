@@ -12,9 +12,10 @@ export function loginCall(formData) {
     $.ajax({
         url: '../../php/general/login.php',
         type: 'POST',
-        data: { 'operation': 'login', ...formData },
+        data: { 'loginOperation': 'login', ...formData },
         success: function (response) {
             Swal.close();
+            console.log(response);
             response = JSON.parse(response);
 
             if (response.status != undefined && response.status != 200) {
@@ -58,7 +59,7 @@ export function logoutCall() {
     $.ajax({
         url: '../../php/general/login.php',
         type: 'POST',
-        data: { 'operation': 'logout' },
+        data: { 'loginOperation': 'logout' },
         success: function (response) {
             location.reload(true);
         },

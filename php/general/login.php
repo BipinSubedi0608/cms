@@ -1,19 +1,26 @@
 <?php
 
+
 include "../firebase/users/firebaseAuth.php";
 include "../firebase/users/userOperations.php";
 include "./loadContent.php";
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['operation'])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['loginOperation'])) {
 
-    if ($_POST['operation'] == 'login') {
-        $email = isset($_POST["email"]) ? validate($_POST['email']) : "";
-        $password = isset($_POST["password"]) ? validate($_POST['password']) : "";
-        echo login($email, $password);
-    } else if ($_POST['operation'] == 'logout') {
-        echo logout();
-    } else {
-        echo "Invalid Operation.";
+    switch ($_POST["loginOperation"]) {
+        case "login":
+            $email = isset($_POST["email"]) ? validate($_POST['email']) : "";
+            $password = isset($_POST["password"]) ? validate($_POST['password']) : "";
+            echo login($email, $password);
+            break;
+
+        case "logout":
+            echo logout();
+            break;
+
+        default:
+            echo json_encode(["error" => "Invalid Operation"]);
+            break;
     }
 }
 

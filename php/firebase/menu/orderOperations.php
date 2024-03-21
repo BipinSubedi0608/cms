@@ -65,6 +65,81 @@ function getAllOrders()
 
 
 
+function getFilteredOrders($filterField, $filterValue, $op)
+{
+    $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
+    $projectId = 'cms-08-02-2024';
+    $collection = 'orders';
+    $url = "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents:runQuery?key=$apiKey";
+
+    $documents = array();
+
+    $queryParams = [
+        "structuredQuery" => [
+            "from" => [[
+                "collectionId" => $collection,
+                "allDescendants" => true
+            ]],
+
+            "where" => [
+                "fieldFilter" => [
+                    "field" => [
+                        "fieldPath" => "$filterField"
+                    ],
+                    "op" => "$op",
+                    "value" => [
+                        "stringValue" => "$filterValue"
+                    ]
+                ]
+            ]
+        ]
+    ];
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($queryParams));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+    ]);
+
+    $response = curl_exec($ch);
+    $responseArray = json_decode($response, true);
+
+    if (curl_errno($ch)) {
+        return ('Error: ' . curl_error($ch));
+    }
+
+    curl_close($ch);
+
+    // return json_encode($responseArray);
+
+    if (count($responseArray) >= 1) {
+        $i = 0;
+        foreach ($responseArray as $document) {
+            $doc = $document['document'];
+
+            $temp = explode('/', $doc['name']);
+
+            if (end($temp) == 'ASEx4l4vKK9lqhJnmgCm') continue; //Placeholder document is skipped
+
+            $documents[$i] = [
+                'id' => end($temp),
+                'foodId' =>  $doc['fields']['foodId']['stringValue'],
+                'studentId' =>  $doc['fields']['studentId']['stringValue'],
+                'isBought' =>  $doc['fields']['isBought']['stringValue'],
+                'orderTime' =>  $doc['fields']['orderTime']['stringValue'],
+            ];
+            $i++;
+        }
+    }
+
+    return json_encode($documents);
+}
+
+
+
 function getOrdersByReference($referenceBy, $refrenceId)
 {
     $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
@@ -106,15 +181,13 @@ function getOrdersByReference($referenceBy, $refrenceId)
     $responseArray = json_decode($response, true);
     $listOfFilteredOrders = array();
 
-    echo $response;
-
     if (curl_errno($ch)) {
         return ('Error: ' . curl_error($ch));
     }
 
     curl_close($ch);
 
-    if (count($responseArray) > 1) {
+    if (count($responseArray) >= 1) {
         $i = 0;
         foreach ($responseArray as $document) {
             $temp = explode('/', $document['document']['name']);

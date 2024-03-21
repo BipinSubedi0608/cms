@@ -4,7 +4,10 @@ include_once __DIR__ . "/../../php/firebase/menu/orderOperations.php";
 include_once __DIR__ . "/../../php/firebase/users/userOperations.php";
 
 date_default_timezone_set('Asia/Kathmandu');
-$ordersList = json_decode(getAllOrders(), true);
+$timestamp_12am = strtotime(date('Y-m-d') . ' 00:00:00');
+$ordersList = json_decode(getFilteredOrders("orderTime", $timestamp_12am, "GREATER_THAN_OR_EQUAL"), true);
+
+// echo json_encode($ordersList);
 
 function orderCardComponent($orderData, $orderedFoodData, $orderedUserData)
 {
@@ -35,9 +38,12 @@ function orderCardComponent($orderData, $orderedFoodData, $orderedUserData)
     <div class="row w-100">
         <div class="col">
             <div class="row my-3 mx-2 mb-4">
-                <div class="hstack gap-5">
+                <div class="hstack gap-3">
                     <button type='button' class='historyBtn btn btn-secondary'>
                         <i class="fa-solid fa-clock-rotate-left"></i>&#160;History
+                    </button>
+                    <button type='button' class='historyBtn btn btn-outline-secondary'>
+                        <i class="fa-regular fa-circle-check"></i>&#160;Taken
                     </button>
                     <div class="input-group ms-auto" style="max-width: 40vw;">
                         <input type="text" class="orderSearchInput form-control" placeholder="Enter student id" aria-label="Enter student id">
@@ -103,8 +109,21 @@ function orderCardComponent($orderData, $orderedFoodData, $orderedUserData)
         $('.orderSearchBtn').click(async function(e) {
             let clgId = $('.orderSearchInput').val();
             let stdId = await getUserIdFromClgId(clgId);
-            console.log("StdId: " + stdId);
-            getOrderFromReference("student", stdId);
+
+            console.log(stdId);
+
+            if (stdId == null || stdId == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: `Error 404`,
+                    text: "User with id " + clgId + " not found",
+                    showConfirmButton: true,
+                    timer: 3000,
+                    timerProgressBar: true,
+                });
+            } else {
+                getOrderFromReference("student", stdId);
+            }
         });
     });
 </script>
