@@ -1,6 +1,6 @@
 <?php
 
-include __DIR__ . "/../../general/sessionManagement.php";
+include_once __DIR__ . "/../../general/sessionManagement.php";
 
 function firebaseLogin($email, $password)
 {
@@ -59,13 +59,55 @@ function firebaseLogin($email, $password)
 
 
 
-function firebaseUpdatePassword($userId, $newPass)
+function firebaseCreateUser($email, $password)
+{
+    $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
+    $url = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=$apiKey";
+
+    $userDetails = json_encode([
+        'email' => $email,
+        'password' => $password,
+        'returnSecureToken' => true,
+    ]);
+
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $userDetails);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+    ]);
+
+    $response = curl_exec($ch);
+    $responseObj = json_decode($response, true);
+
+    if ($response === false) {
+        echo 'cURL error: ' . curl_error($ch);
+    }
+    curl_close($ch);
+
+    if (isset($responseObj['error'])) {
+        return null;
+    }
+
+    $localId  = $responseObj['localId'];
+    createUserInitialInstance($localId, $email, $password);
+
+    return $localId;
+}
+
+
+
+function firebaseUpdatePassword($idToken, $newPass)
 {
     $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
     $url = "https://identitytoolkit.googleapis.com/v1/accounts:update?key=$apiKey";
 
     $requestData = json_encode([
-        'idToken' => $userId,
+        'idToken' => $idToken,
         'password' => $newPass,
         'returnSecureToken' => true,
     ]);

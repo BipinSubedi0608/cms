@@ -117,7 +117,7 @@ function getFoodWithId($foodId)
 
 
 
-function getFilteredMenu($lastCheckedTime)
+function getFilteredMenu($filterField, $filterValue)
 {
     $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
     $projectId = 'cms-08-02-2024';
@@ -136,11 +136,11 @@ function getFilteredMenu($lastCheckedTime)
             "where" => [
                 "fieldFilter" => [
                     "field" => [
-                        "fieldPath" => 'lastUpdatedTime'
+                        "fieldPath" => "$filterField"
                     ],
                     "op" => "GREATER_THAN_OR_EQUAL",
                     "value" => [
-                        "stringValue" => "$lastCheckedTime",
+                        "stringValue" => "$filterValue"
                     ]
                 ]
             ]

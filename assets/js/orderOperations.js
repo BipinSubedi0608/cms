@@ -28,6 +28,25 @@ export async function getOrder(orderId) {
     });
 }
 
+export async function getOrderFromReference(referenceBy, referenceId) {
+    $.ajax({
+        type: "POST",
+        url: "../../php/firebase/menu/orderOperations.php",
+        data: {
+            'operation': 'reference',
+            'referenceBy': referenceBy,
+            'referenceId': referenceId,
+        },
+        dataType: "application/json",
+        success: function (response) {
+            console.log(response);
+        },
+        error: function (error) {
+            console.log("error: " + error.responseText);
+        },
+    });
+}
+
 export async function showOrderConfirmModal(orderId) {
     return new Promise((resolve, reject) => {
         $.ajax({

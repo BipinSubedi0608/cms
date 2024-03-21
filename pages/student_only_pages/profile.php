@@ -46,6 +46,10 @@ $currentUser = json_decode(getUser($currentUserId), true);
 </div>
 
 <script>
+    import {
+        updatePassword
+    } from "../../assets/js/userOperations.js";
+
     $(document).ready(() => {
         $('.editProfileBtn').click(() => {
             $('#updatePasswordModal').modal('show');
@@ -56,25 +60,7 @@ $currentUser = json_decode(getUser($currentUserId), true);
             e.preventDefault();
             let oldPass = $('#oldPassInput').val();
             let newPass = $('#newPassInput').val();
-            $.ajax({
-                url: '../../php/firebase/users/userOperations.php',
-                type: 'POST',
-                data: {
-                    'operation': 'changePass',
-                    'userId': "<?php echo $currentUserId; ?>",
-                    'oldPass': oldPass,
-                    'newPass': newPass,
-                },
-                dataType: "application/json",
-                success: function(response) {
-                    response = JSON.stringify(response)
-                    console.log(response);
-                },
-                error: function(error) {
-                    error = JSON.stringify(error)
-                    console.log(error);
-                }
-            });
+            updatePassword(oldPass, newPass);
         });
     });
 </script>

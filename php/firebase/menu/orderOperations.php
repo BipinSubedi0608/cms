@@ -10,6 +10,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['operation'])) {
             echo getOrderWithId($_POST['orderId']);
             break;
 
+        case 'reference':
+            echo getOrdersByReference($_POST['referenceBy'], $_POST['referenceId']);
+            break;
+
         case 'confirm':
             echo confirmOrder($_POST['orderId']);
             break;
@@ -57,6 +61,78 @@ function getAllOrders()
     }
 
     return json_encode($documents);
+}
+
+
+
+function getOrdersByReference($referenceBy, $refrenceId)
+{
+    $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
+    $projectId = 'cms-08-02-2024';
+    $collection = 'orders';
+    $url = "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents:runQuery?key=$apiKey";
+
+    $queryParams = [
+        "structuredQuery" => [
+            "from" => [[
+                "collectionId" => $collection,
+                "allDescendants" => true
+            ]],
+
+            "where" => [
+                "fieldFilter" => [
+                    "field" => [
+                        "fieldPath" => $referenceBy . "Id"
+                    ],
+                    "op" => "EQUAL",
+                    "value" => [
+                        "stringValue" => "$refrenceId"
+                    ]
+                ]
+            ]
+        ]
+    ];
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($queryParams));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+    ]);
+
+    $response = curl_exec($ch);
+    $responseArray = json_decode($response, true);
+    $listOfFilteredOrders = array();
+
+    echo $response;
+
+    if (curl_errno($ch)) {
+        return ('Error: ' . curl_error($ch));
+    }
+
+    curl_close($ch);
+
+    if (count($responseArray) > 1) {
+        $i = 0;
+        foreach ($responseArray as $document) {
+            $temp = explode('/', $document['document']['name']);
+
+            if (end($temp) == 'ASEx4l4vKK9lqhJnmgCm') continue; //Placeholder document is skipped
+
+            $listOfFilteredOrders[$i] = [
+                'id' => end($temp),
+                'foodId' =>  $document['document']['fields']['foodId']['stringValue'],
+                'studentId' =>  $document['document']['fields']['studentId']['stringValue'],
+                'orderTime' =>  $document['document']['fields']['orderTime']['stringValue'],
+                'isBought' =>  $document['document']['fields']['isBought']['stringValue'],
+            ];
+            $i++;
+        }
+    }
+
+    return json_encode($listOfFilteredOrders);
 }
 
 

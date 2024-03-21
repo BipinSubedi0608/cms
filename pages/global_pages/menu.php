@@ -71,7 +71,7 @@ function cardComponent($foodData, $isAdmin)
 
 <?php
 // while (true) {
-//     $updatedFoods = json_decode(getFilteredMenu(time()), true);
+//     $updatedFoods = json_decode(getFilteredMenu("lastUpdatedTime", time()), true);
 //     if (count($updatedFoods) > 0) {
 //         foreach ($updatedFoods as $food) {
 //             if ($food['isDeleted'] == 'true') {
