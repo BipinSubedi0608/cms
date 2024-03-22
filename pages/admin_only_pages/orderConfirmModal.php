@@ -12,6 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') :
     $orderedUser = json_decode(getUser($orderDetails['studentId']), true);
 
     date_default_timezone_set('Asia/Kathmandu');
+    $todayDate = date('Y/m/d');
+
     $orderedDate = date('Y/m/d', $orderDetails['orderTime']);
     $orderedTime = date('H:i', $orderDetails['orderTime']);
 ?>
@@ -59,9 +61,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') :
                 </div>
 
                 <div class="modal-footer d-flex justify-content-center">
-                    <button type="button" id="orderConfirmButton" class="btn btn-outline-info" data-bs-dismiss="modal">
-                        Confirm
-                    </button>
+                    <?php if ($orderedDate == $todayDate) : ?>
+                        <button type="button" id="orderConfirmButton" class="btn btn-outline-info" data-bs-dismiss="modal">
+                            Confirm
+                        </button>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -78,6 +82,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') :
         $('#orderConfirmButton').click(function(e) {
             let orderId = $('#orderConfirmModal').data('key');
             confirmOrder(orderId);
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Order Bought Successfully',
+                showConfirmButton: true,
+                timer: 1500,
+                timerProgressBar: true,
+            }).then(() => {
+                location.reload(true);
+            });
         });
     });
 </script>

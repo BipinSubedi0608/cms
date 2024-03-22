@@ -2,6 +2,7 @@ import loader from '../../pages/global_pages/loadingComponent.js';
 
 export default function loadPageInRootContainer(page) {
     $('body').append(loader);
+    $('body').css("pointer-events", "none");
     $('.active').removeClass("active");
     $(`.navbarBtn[data-page=${page}]`).addClass("active");
 
@@ -11,6 +12,7 @@ export default function loadPageInRootContainer(page) {
         data: { page: page },
         success: async function (response) {
             $('body .loader').remove();
+            $('body').css("pointer-events", "all");
             if (page == 'login') {
                 $('body').html(response);
             } else {
@@ -20,6 +22,7 @@ export default function loadPageInRootContainer(page) {
         },
         error: function (error) {
             $('body .loader').remove();
+            $('body').css("pointer-events", "all");
             console.log(`Error ${error.status}: ${error.statusText}`);
         }
     });

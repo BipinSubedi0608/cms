@@ -113,9 +113,7 @@ function getFilteredOrders($filterField, $filterValue, $op)
 
     curl_close($ch);
 
-    // return json_encode($responseArray);
-
-    if (count($responseArray) >= 1) {
+    if (count($responseArray) > 0 && isset($responseArray[0]['document'])) {
         $i = 0;
         foreach ($responseArray as $document) {
             $doc = $document['document'];
@@ -187,7 +185,7 @@ function getOrdersByReference($referenceBy, $refrenceId)
 
     curl_close($ch);
 
-    if (count($responseArray) >= 1) {
+    if (count($responseArray) > 0 && isset($responseArray[0]['document'])) {
         $i = 0;
         foreach ($responseArray as $document) {
             $temp = explode('/', $document['document']['name']);

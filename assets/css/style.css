@@ -19,11 +19,11 @@ body {
   font-weight: 800;
 }
 
-p {
+/* p {
   font-family: "Recursive", sans-serif;
   font-size: 1.3rem;
   font-weight: 400;
-}
+} */
 
 .align-center {
   display: flex;
@@ -39,10 +39,10 @@ p {
 
   }
 
-  p {
+  /* p {
     font-size: 1.5rem;
 
-  }
+  } */
 }
 
 @media (max-width: 576px) {
@@ -50,10 +50,10 @@ p {
     font-size: 3rem !important;
   }
 
-  p {
+  /* p {
     font-size: 1.2rem;
 
-  }
+  } */
 }
 
 /* Home.css Ends */

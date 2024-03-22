@@ -176,7 +176,7 @@ function getUserIdFromClgId($clgId)
 
     curl_close($ch);
 
-    if (count($responseArray) < 1) {
+    if (count($responseArray) == 1 && (!isset($responseArray[0]['document']))) {
         return null;
     }
 
@@ -237,7 +237,7 @@ function getFilteredUser($filterField, $filterValue, $requirePassword = false)
 
     curl_close($ch);
 
-    if (count($responseArray) > 1) {
+    if (count($responseArray) > 0 && isset($responseArray[0]['document'])) {
         $i = 0;
         foreach ($responseArray as $document) {
             $user = $document['document'];

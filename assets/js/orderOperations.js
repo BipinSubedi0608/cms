@@ -1,3 +1,5 @@
+import loader from '../../pages/global_pages/loadingComponent.js';
+
 export function placeOrder(foodId) {
     $.ajax({
         type: "POST",
@@ -12,6 +14,25 @@ export function placeOrder(foodId) {
         },
     });
 }
+
+// export async function getOldOrders() {
+//     return new Promise((resolve, reject) => {
+//         $.ajax({
+//             type: "POST",
+//             url: "../../php/firebase/menu/orderOperations.php",
+//             data: { 'operation': 'getOld' },
+//             dataType: "application/json",
+//             success: function (response) {
+//                 console.log(response);
+//                 resolve(response);
+//             },
+//             error: function (error) {
+//                 console.log("error: " + error.responseText);
+//                 reject(error.responseText);
+//             },
+//         });
+//     })
+// }
 
 export async function getOrder(orderId) {
     $.ajax({
@@ -77,6 +98,28 @@ export function confirmOrder(orderId) {
         },
         error: function (error) {
             console.log("error: " + error.responseText);
+        },
+    });
+}
+
+export function renderOrdersHistory() {
+    $('body').append(loader);
+    $('body').css("pointer-events", "none");
+    $.ajax({
+        type: "POST",
+        url: "../../pages/admin_only_pages/orders.php",
+        data: { 'renderOptions': 'history' },
+        dataType: "application/json",
+        success: function (response) {
+            // console.log(response);
+            $('#root').html(response);
+            $('body').css("pointer-events", "all");
+        },
+        error: function (error) {
+            // console.log("error: " + error.responseText);
+            $('#root').html(error.responseText);
+            $('body .loader').remove();
+            $('body').css("pointer-events", "all");
         },
     });
 }

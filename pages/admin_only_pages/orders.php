@@ -5,9 +5,13 @@ include_once __DIR__ . "/../../php/firebase/users/userOperations.php";
 
 date_default_timezone_set('Asia/Kathmandu');
 $timestamp_12am = strtotime(date('Y-m-d') . ' 00:00:00');
-$ordersList = json_decode(getFilteredOrders("orderTime", $timestamp_12am, "GREATER_THAN_OR_EQUAL"), true);
+$op = (isset($_POST['renderOptions'])) ? "LESS_THAN" : "GREATER_THAN_OR_EQUAL";
 
+$ordersList = json_decode(getFilteredOrders("orderTime", $timestamp_12am, $op), true);
+
+// echo "<br>.................<br>";
 // echo json_encode($ordersList);
+// echo "<br>.................<br>";
 
 function orderCardComponent($orderData, $orderedFoodData, $orderedUserData)
 {
@@ -15,6 +19,12 @@ function orderCardComponent($orderData, $orderedFoodData, $orderedUserData)
     return "
     <div class='row justify-content-center my-4 mx-2'>
         <div data-key={$orderData['id']} class='orderCard card position-relative border-dark shadow-lg p-0 w-50'>
+        "
+        . ($orderData['isBought'] == 'true' ?
+            "<span class='position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success'>
+                <i class='fa-solid fa-check'></i>
+             </span> " : "") .
+        "
             <div class='hstack gap-3 p-0'>
                 <img height='72' width='72' src={$orderedFoodData['imgUrl']} alt={$orderedFoodData['name']}>
                 <div class='card-body p-2'>
@@ -40,9 +50,13 @@ function orderCardComponent($orderData, $orderedFoodData, $orderedUserData)
             <div class="row my-3 mx-2 mb-4">
                 <div class="hstack gap-3">
                     <button type='button' class='historyBtn btn btn-secondary'>
-                        <i class="fa-solid fa-clock-rotate-left"></i>&#160;History
+                        <?php
+                        echo (isset($_POST['renderOptions'])) ?
+                            '<i class="fa-solid fa-arrow-left"></i>&#160;<span id="historyBtnText">Back</span>' :
+                            '<i class="fa-solid fa-clock-rotate-left"></i>&#160;<span id="historyBtnText">History</span>';
+                        ?>
                     </button>
-                    <button type='button' class='historyBtn btn btn-outline-secondary'>
+                    <button type='button' class='takenBtn btn btn-outline-secondary'>
                         <i class="fa-regular fa-circle-check"></i>&#160;Taken
                     </button>
                     <div class="input-group ms-auto" style="max-width: 40vw;">
@@ -56,34 +70,17 @@ function orderCardComponent($orderData, $orderedFoodData, $orderedUserData)
                 </div>
             </div>
 
+            <div id="ordersContainer">
+                <?php
+                foreach ($ordersList as $order) {
+                    $orderedFood = json_decode(getFoodWithId($order['foodId']), true);
+                    $orderedUser = json_decode(getUser($order['studentId']), true);
+                    echo orderCardComponent($order, $orderedFood, $orderedUser);
+                }
 
-            <?php
-            foreach ($ordersList as $order) {
-                $orderedFood = json_decode(getFoodWithId($order['foodId']), true);
-                $orderedUser = json_decode(getUser($order['studentId']), true);
-                echo orderCardComponent($order, $orderedFood, $orderedUser);
-            }
-
-            ?>
-        </div>
-
-        <!-- <div class="col-4">
-            <div class="aside-right bg-secondary" style="height: 100vh; width:30%; overflow: hidden; position: fixed; right: 0;">
-                <div class="vstack m-5">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Enter student id" aria-label="Enter student id" aria-describedby="basic-addon2">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="button">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <
-                </div>
+                ?>
             </div>
-        </div> -->
-
+        </div>
     </div>
 </div>
 
@@ -92,7 +89,8 @@ function orderCardComponent($orderData, $orderedFoodData, $orderedUserData)
 <script type="module">
     import {
         showOrderConfirmModal,
-        getOrderFromReference
+        getOrderFromReference,
+        renderOrdersHistory,
     } from '../../assets/js/orderOperations.js';
 
     import {
@@ -100,17 +98,27 @@ function orderCardComponent($orderData, $orderedFoodData, $orderedUserData)
     } from '../../assets/js/userOperations.js';
 
     $(document).ready(() => {
+        let currentOrderPage = ($('#historyBtnText').text());
+
         $('.orderCard').click(async function(e) {
             let orderConfirmModal = await showOrderConfirmModal($(this).data('key'));
             $('#orderPage').append(orderConfirmModal);
             $('#orderConfirmModal').modal('show');
         });
 
+        $('.historyBtn').click(function(e) {
+            e.preventDefault();
+            if (currentOrderPage == "History") {
+                $('#ordersContainer').empty();
+                renderOrdersHistory();
+            } else {
+                location.reload(true);
+            }
+        });
+
         $('.orderSearchBtn').click(async function(e) {
             let clgId = $('.orderSearchInput').val();
             let stdId = await getUserIdFromClgId(clgId);
-
-            console.log(stdId);
 
             if (stdId == null || stdId == "") {
                 Swal.fire({

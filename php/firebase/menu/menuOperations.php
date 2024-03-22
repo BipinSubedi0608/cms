@@ -165,9 +165,7 @@ function getFilteredMenu($filterField, $filterValue)
 
     curl_close($ch);
 
-    // return json_encode($responseArray);
-
-    if (count($responseArray) > 1) {
+    if (count($responseArray) > 0 && isset($responseArray[0]['document'])) {
         $i = 0;
         foreach ($responseArray as $document) {
             $doc = $document['document'];
@@ -219,7 +217,7 @@ function addMenu($foodName, $foodQuantity, $foodPrice, $imageURL)
                 "stringValue" => 'false'
             ],
             "lastUpdatedTime" => [
-                "stringValue" => (string) time()
+                "stringValue" => (string) time(),
             ],
         ]
     ]);
@@ -249,7 +247,9 @@ function addMenu($foodName, $foodQuantity, $foodPrice, $imageURL)
         'name' =>  $responseObj['fields']['name']['stringValue'],
         'price' =>  $responseObj['fields']['price']['stringValue'],
         'quantity' =>  $responseObj['fields']['quantity']['stringValue'],
-        'imgUrl' =>  $responseObj['fields']['imgUrl']['stringValue']
+        'imgUrl' =>  $responseObj['fields']['imgUrl']['stringValue'],
+        'lastUpdatedTime' =>  $responseObj['fields']['lastUpdatedTime']['stringValue'],
+        'isDeleted' =>  $responseObj['fields']['isDeleted']['stringValue'],      
     ];
 
     return json_encode($food);
