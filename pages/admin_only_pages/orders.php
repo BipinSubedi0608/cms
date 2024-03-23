@@ -4,7 +4,7 @@ include_once __DIR__ . "/../../php/firebase/menu/orderOperations.php";
 include_once __DIR__ . "/../../php/firebase/users/userOperations.php";
 
 date_default_timezone_set('Asia/Kathmandu');
-$timestamp_12am = strtotime(date('Y-m-d') . ' 00:00:00');
+$timestamp_12am = strtotime(date('Y/m/d') . ' 00:00:00');
 $op = (isset($_POST['renderOptions'])) ? "LESS_THAN" : "GREATER_THAN_OR_EQUAL";
 
 $ordersList = json_decode(getFilteredOrders("orderTime", $timestamp_12am, $op), true);
@@ -16,6 +16,7 @@ $ordersList = json_decode(getFilteredOrders("orderTime", $timestamp_12am, $op), 
 function orderCardComponent($orderData, $orderedFoodData, $orderedUserData)
 {
     $orderedTime = date('H:i', $orderData['orderTime']);
+    $orderedDate = date('Y/m/d', $orderData['orderTime']);
     return "
     <div class='row justify-content-center my-4 mx-2'>
         <div data-key={$orderData['id']} class='orderCard card position-relative border-dark shadow-lg p-0 w-50'>
@@ -34,7 +35,13 @@ function orderCardComponent($orderData, $orderedFoodData, $orderedUserData)
                     </div>
                     <div class='hstack gap-3'>
                         <p class='card-text mb-0'><small class='text-muted'>Ordered by: {$orderedUserData['name']}</small></p>
+                        "
+        . (isset($_POST['renderOptions']) ? "
+                        <p class='card-text ms-auto me-4'><small class='text-muted'>Order date: {$orderedDate}</small></p>
+                        " : "
                         <p class='card-text ms-auto me-4'><small class='text-muted'>Order time: {$orderedTime}</small></p>
+                        ") .
+        "
                     </div>
                 </div>
             </div>
@@ -55,9 +62,6 @@ function orderCardComponent($orderData, $orderedFoodData, $orderedUserData)
                             '<i class="fa-solid fa-arrow-left"></i>&#160;<span id="historyBtnText">Back</span>' :
                             '<i class="fa-solid fa-clock-rotate-left"></i>&#160;<span id="historyBtnText">History</span>';
                         ?>
-                    </button>
-                    <button type='button' class='takenBtn btn btn-outline-secondary'>
-                        <i class="fa-regular fa-circle-check"></i>&#160;Taken
                     </button>
                     <div class="input-group ms-auto" style="max-width: 40vw;">
                         <input type="text" class="orderSearchInput form-control" placeholder="Enter student id" aria-label="Enter student id">

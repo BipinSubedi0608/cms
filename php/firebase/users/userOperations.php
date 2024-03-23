@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['operation'])) {
             break;
 
         default:
-            echo "Invalid Operation";
+            echo "Invalid User Operation";
             break;
     }
 }

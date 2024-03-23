@@ -4,7 +4,7 @@ export function placeOrder(foodId) {
     $.ajax({
         type: "POST",
         url: "../../php/firebase/menu/orderOperations.php",
-        data: { 'operation': 'create', 'foodId': foodId },
+        data: { 'orderOperation': 'create', 'foodId': foodId },
         dataType: "application/json",
         success: function (response) {
             console.log(response);
@@ -20,7 +20,7 @@ export function placeOrder(foodId) {
 //         $.ajax({
 //             type: "POST",
 //             url: "../../php/firebase/menu/orderOperations.php",
-//             data: { 'operation': 'getOld' },
+//             data: { 'orderOperation': 'getOld' },
 //             dataType: "application/json",
 //             success: function (response) {
 //                 console.log(response);
@@ -38,7 +38,7 @@ export async function getOrder(orderId) {
     $.ajax({
         type: "POST",
         url: "../../php/firebase/menu/orderOperations.php",
-        data: { 'operation': 'get', 'orderId': orderId },
+        data: { 'orderOperation': 'get', 'orderId': orderId },
         dataType: "application/json",
         success: function (response) {
             console.log(response);
@@ -54,7 +54,7 @@ export async function getOrderFromReference(referenceBy, referenceId) {
         type: "POST",
         url: "../../php/firebase/menu/orderOperations.php",
         data: {
-            'operation': 'reference',
+            'orderOperation': 'reference',
             'referenceBy': referenceBy,
             'referenceId': referenceId,
         },
@@ -91,7 +91,7 @@ export function confirmOrder(orderId) {
     $.ajax({
         type: "POST",
         url: "../../php/firebase/menu/orderOperations.php",
-        data: { 'operation': 'confirm', 'orderId': orderId },
+        data: { 'orderOperation': 'confirm', 'orderId': orderId },
         dataType: "application/json",
         success: function (response) {
             console.log(response);

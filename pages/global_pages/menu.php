@@ -27,8 +27,8 @@ function cardComponent($foodData, $isAdmin)
                     <i class='fa-solid fa-trash'></i>&#160;Delete
                 </button>
             </div>
-                " : "
-
+            " : "
+            
             <div class='text-center'>
                 <button type='button' class='buyBtn btn mt-3'>
                     <i class='fa-solid fa-cart-plus fa-lg'></i>&#160;&#160; Buy Now
@@ -107,18 +107,42 @@ function cardComponent($foodData, $isAdmin)
     } from '../../assets/js/orderOperations.js';
 
     $('.deleteBtn').click(function(e) {
-        let foodId = $(this).closest('.foodCard').data('key');
+        let selectedFoodId = $(this).closest('.foodCard').data('key');
+        let selectedFoodName = $(this).parent().siblings('.foodName').text();
 
-        //Sweet alert
+        Swal.fire({
+            icon: 'warning',
+            title: 'Confirm Delete',
+            html: `Do you really want to delete <b>${selectedFoodName}</b> from the menu?`,
+            showConfirmButton: true,
+            allowOutsideClick: true,
+        }).then((value) => {
+            if (value.isConfirmed) {
+                deleteFood(selectedFoodId);
+                Swal.close();
+                location.reload(true);
+            }
+        });
 
-        deleteFood(foodId);
     });
 
     $('.buyBtn').click(function(e) {
-        let foodId = $(this).closest('.foodCard').data('key');
+        let selectedFoodId = $(this).closest('.foodCard').data('key');
+        let selectedFoodName = $(this).parent().siblings('.foodName').text();
 
-        //Sweet alert
+        Swal.fire({
+            icon: 'question',
+            title: 'Are you sure?',
+            html: `Do you really want to buy <b>${selectedFoodName}</b>?`,
+            showConfirmButton: true,
+            allowOutsideClick: true,
+        }).then((value) => {
+            if (value.isConfirmed) {
+                placeOrder(selectedFoodId);
+                Swal.close();
+                // location.reload(true);
+            }
+        });
 
-        placeOrder(foodId);
     });
 </script>

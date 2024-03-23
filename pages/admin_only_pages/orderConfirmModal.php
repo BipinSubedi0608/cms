@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') :
                 </div>
 
                 <div class="modal-footer d-flex justify-content-center">
-                    <?php if ($orderedDate == $todayDate) : ?>
+                    <?php if ($orderedDate == $todayDate && $orderDetails['isBought'] == 'false') : ?>
                         <button type="button" id="orderConfirmButton" class="btn btn-outline-info" data-bs-dismiss="modal">
                             Confirm
                         </button>

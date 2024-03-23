@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['operation'])) {
             break;
 
         default:
-            echo "Invalid Operation";
+            echo "Invalid Menu Operation";
             break;
     }
 }
@@ -303,8 +303,6 @@ function deleteMenu($foodId)
 
     if ($response === false) {
         echo "Error: " . curl_error($ch);
-    } else {
-        return "Document deleted successfully!";
     }
 
     // Close cURL session
@@ -315,6 +313,10 @@ function deleteMenu($foodId)
 
 function editMenu($foodKey, $foodImage, $foodName, $foodQuantity, $foodPrice)
 {
+    echo "...New Quantity: $foodQuantity...";
+    echo "...New Name: $foodName...";
+    echo "...New Price: $foodPrice...";
+
     $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
     $projectId = 'cms-08-02-2024';
     $collection = 'menu';
@@ -357,10 +359,7 @@ function editMenu($foodKey, $foodImage, $foodName, $foodQuantity, $foodPrice)
 
     if ($response === false) {
         echo "Error: " . curl_error($ch);
-    } else {
-        return "Document updated successfully!";
     }
 
-    // Close cURL session
     curl_close($ch);
 }

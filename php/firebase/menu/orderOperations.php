@@ -1,7 +1,7 @@
 <?php
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['operation'])) {
-    switch ($_POST['operation']) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['orderOperation'])) {
+    switch ($_POST['orderOperation']) {
         case 'create':
             echo createOrder($_POST['foodId']);
             break;
@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['operation'])) {
             break;
 
         default:
-            echo "Invalid Operation";
+            echo "Invalid Order Operation";
             break;
     }
 }
@@ -252,8 +252,10 @@ function createOrder($foodId)
     $url = "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents/$collection?key=$apiKey";
 
     include_once __DIR__ . "/../../general/sessionManagement.php";
+    include_once __DIR__ . "/menuOperations.php";
 
     $studentId = getCurrentUserIdFromSession();
+    $orderFoodData = json_decode(getFoodWithId($foodId), true);
 
     $orderData = json_encode([
         "fields" => [
@@ -299,6 +301,14 @@ function createOrder($foodId)
         'orderTime' =>  $responseObj['fields']['orderTime']['stringValue'],
         'isBought' =>  $responseObj['fields']['isBought']['stringValue'],
     ];
+
+    editMenu(
+        $foodId,
+        $orderFoodData['imgUrl'],
+        $orderFoodData['name'],
+        $orderFoodData['quantity'] - 1,
+        $orderFoodData['price']
+    );
 
     return json_encode($orderDetails);
 }
