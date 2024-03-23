@@ -144,7 +144,8 @@ body {
   transition: all 0.5s ease;
 }
 
-.buyBtn:hover {
+.buyBtn:hover,
+.outOfStockBtn {
   color: #ffffff;
   border: 1px solid #ff2800;
   background-color: #ff2800;
@@ -237,6 +238,7 @@ iframe.map-iframe {
 /* MultiStep Form Css Starts */
 /*custom font*/
 @import url(https://fonts.googleapis.com/css?family=Montserrat);
+
 body {
   font-family: montserrat, arial, verdana;
 }

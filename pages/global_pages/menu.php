@@ -27,14 +27,20 @@ function cardComponent($foodData, $isAdmin)
                     <i class='fa-solid fa-trash'></i>&#160;Delete
                 </button>
             </div>
-            " : "
-            
+            " : ($foodData['quantity'] <= 0 ?
+            "
+            <div class='text-center'>
+                <button type='button' class='outOfStockBtn btn mt-3' disabled>
+                    <i class='fa-solid fa-circle-xmark'></i>&#160;&#160; Out Of Stock
+                </button>
+            </div>" : "
+
             <div class='text-center'>
                 <button type='button' class='buyBtn btn mt-3'>
                     <i class='fa-solid fa-cart-plus fa-lg'></i>&#160;&#160; Buy Now
                 </button>
             </div>
-            ") . "
+            ")) . "
 
         </div >
     </div >";
@@ -140,7 +146,7 @@ function cardComponent($foodData, $isAdmin)
             if (value.isConfirmed) {
                 placeOrder(selectedFoodId);
                 Swal.close();
-                // location.reload(true);
+                location.reload(true);
             }
         });
 

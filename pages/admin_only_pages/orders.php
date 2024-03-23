@@ -5,9 +5,16 @@ include_once __DIR__ . "/../../php/firebase/users/userOperations.php";
 
 date_default_timezone_set('Asia/Kathmandu');
 $timestamp_12am = strtotime(date('Y/m/d') . ' 00:00:00');
-$op = (isset($_POST['renderOptions'])) ? "LESS_THAN" : "GREATER_THAN_OR_EQUAL";
+$renderOptions = (isset($_POST['renderOptions'])) ? "history" : "default";
+$operator = ($renderOptions == "history" ? "LESS_THAN" : "GREATER_THAN_OR_EQUAL");
+$ordersList = array();
 
-$ordersList = json_decode(getFilteredOrders("orderTime", $timestamp_12am, $op), true);
+if (isset($_POST['search'])) {
+    $ordersList = json_decode($_POST['search'], true);
+    $renderOptions = $_POST['searchRenderOption'];
+} else {
+    $ordersList = json_decode(getFilteredOrders("orderTime", $timestamp_12am, $operator), true);
+}
 
 // echo "<br>.................<br>";
 // echo json_encode($ordersList);
@@ -15,6 +22,7 @@ $ordersList = json_decode(getFilteredOrders("orderTime", $timestamp_12am, $op), 
 
 function orderCardComponent($orderData, $orderedFoodData, $orderedUserData)
 {
+    global $renderOptions;
     $orderedTime = date('H:i', $orderData['orderTime']);
     $orderedDate = date('Y/m/d', $orderData['orderTime']);
     return "
@@ -36,7 +44,7 @@ function orderCardComponent($orderData, $orderedFoodData, $orderedUserData)
                     <div class='hstack gap-3'>
                         <p class='card-text mb-0'><small class='text-muted'>Ordered by: {$orderedUserData['name']}</small></p>
                         "
-        . (isset($_POST['renderOptions']) ? "
+        . ($renderOptions == 'history' ? "
                         <p class='card-text ms-auto me-4'><small class='text-muted'>Order date: {$orderedDate}</small></p>
                         " : "
                         <p class='card-text ms-auto me-4'><small class='text-muted'>Order time: {$orderedTime}</small></p>
@@ -58,7 +66,7 @@ function orderCardComponent($orderData, $orderedFoodData, $orderedUserData)
                 <div class="hstack gap-3">
                     <button type='button' class='historyBtn btn btn-secondary'>
                         <?php
-                        echo (isset($_POST['renderOptions'])) ?
+                        echo ($renderOptions == "history") ?
                             '<i class="fa-solid fa-arrow-left"></i>&#160;<span id="historyBtnText">Back</span>' :
                             '<i class="fa-solid fa-clock-rotate-left"></i>&#160;<span id="historyBtnText">History</span>';
                         ?>
@@ -93,8 +101,9 @@ function orderCardComponent($orderData, $orderedFoodData, $orderedUserData)
 <script type="module">
     import {
         showOrderConfirmModal,
-        getOrderFromReference,
+        getOrderFromStdId,
         renderOrdersHistory,
+        renderSearchedOrders,
     } from '../../assets/js/orderOperations.js';
 
     import {
@@ -105,6 +114,7 @@ function orderCardComponent($orderData, $orderedFoodData, $orderedUserData)
         let currentOrderPage = ($('#historyBtnText').text());
 
         $('.orderCard').click(async function(e) {
+            console.log($(this).data('key'));
             let orderConfirmModal = await showOrderConfirmModal($(this).data('key'));
             $('#orderPage').append(orderConfirmModal);
             $('#orderConfirmModal').modal('show');
@@ -134,7 +144,15 @@ function orderCardComponent($orderData, $orderedFoodData, $orderedUserData)
                     timerProgressBar: true,
                 });
             } else {
-                getOrderFromReference("student", stdId);
+                if (currentOrderPage == "History") { //Current Page NOT History
+                    $('#ordersContainer').empty();
+                    let searchedOrders = await getOrderFromStdId(stdId);
+                    renderSearchedOrders(searchedOrders, "default");
+                } else {
+                    $('#ordersContainer').empty();
+                    let searchedOrders = await getOrderFromStdId(stdId, "true");
+                    renderSearchedOrders(searchedOrders, "history");
+                }
             }
         });
     });

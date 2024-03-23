@@ -313,10 +313,6 @@ function deleteMenu($foodId)
 
 function editMenu($foodKey, $foodImage, $foodName, $foodQuantity, $foodPrice)
 {
-    echo "...New Quantity: $foodQuantity...";
-    echo "...New Name: $foodName...";
-    echo "...New Price: $foodPrice...";
-
     $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
     $projectId = 'cms-08-02-2024';
     $collection = 'menu';
@@ -325,16 +321,16 @@ function editMenu($foodKey, $foodImage, $foodName, $foodQuantity, $foodPrice)
     $data = json_encode([
         "fields" => [
             "imgUrl" => [
-                "stringValue" => $foodImage,
+                "stringValue" => (string) $foodImage,
             ],
             "name" => [
-                "stringValue" => $foodName,
+                "stringValue" => (string) $foodName,
             ],
             "quantity" => [
-                "stringValue" => $foodQuantity,
+                "stringValue" => (string) $foodQuantity,
             ],
             "price" => [
-                "stringValue" => $foodPrice,
+                "stringValue" => (string) $foodPrice,
             ],
             "isDeleted" => [
                 "stringValue" => 'false',

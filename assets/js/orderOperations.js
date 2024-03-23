@@ -49,23 +49,27 @@ export async function getOrder(orderId) {
     });
 }
 
-export async function getOrderFromReference(referenceBy, referenceId) {
-    $.ajax({
-        type: "POST",
-        url: "../../php/firebase/menu/orderOperations.php",
-        data: {
-            'orderOperation': 'reference',
-            'referenceBy': referenceBy,
-            'referenceId': referenceId,
-        },
-        dataType: "application/json",
-        success: function (response) {
-            console.log("Success: " + response);
-        },
-        error: function (error) {
-            console.log(error.responseText);
-        },
-    });
+export async function getOrderFromStdId(stdId, isHistory = "false") {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type: "POST",
+            url: "../../php/firebase/menu/orderOperations.php",
+            data: {
+                'orderOperation': 'reference',
+                'stdId': stdId,
+                'isHistory': isHistory
+            },
+            dataType: "application/json",
+            success: function (response) {
+                // console.log("Success: " + response);
+                reject(response);
+            },
+            error: function (error) {
+                // console.log(error.responseText);
+                resolve(error.responseText);
+            },
+        });
+    })
 }
 
 export async function showOrderConfirmModal(orderId) {
@@ -113,6 +117,29 @@ export function renderOrdersHistory() {
         success: function (response) {
             // console.log(response);
             $('#root').html(response);
+            $('body').css("pointer-events", "all");
+        },
+        error: function (error) {
+            // console.log("error: " + error.responseText);
+            $('#root').html(error.responseText);
+            $('body .loader').remove();
+            $('body').css("pointer-events", "all");
+        },
+    });
+}
+
+export function renderSearchedOrders(searchedOrdersJson, searchRenderOption) {
+    $('body').append(loader);
+    $('body').css("pointer-events", "none");
+    $.ajax({
+        type: "POST",
+        url: "../../pages/admin_only_pages/orders.php",
+        data: { 'search': searchedOrdersJson, "searchRenderOption": searchRenderOption },
+        dataType: "application/json",
+        success: function (response) {
+            // console.log(response);
+            $('#root').html(response);
+            $('body .loader').remove();
             $('body').css("pointer-events", "all");
         },
         error: function (error) {

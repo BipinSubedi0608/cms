@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['orderOperation'])) {
             break;
 
         case 'reference':
-            echo getOrdersByReference($_POST['referenceBy'], $_POST['referenceId']);
+            echo getOrdersByStdId($_POST['stdId'], $_POST['isHistory']);
             break;
 
         case 'confirm':
@@ -91,7 +91,14 @@ function getFilteredOrders($filterField, $filterValue, $op)
                         "stringValue" => "$filterValue"
                     ]
                 ]
-            ]
+            ],
+
+            "orderBy" => [[
+                "field" => [
+                    "fieldPath" => "orderTime"
+                ],
+                "direction" => "DESCENDING"
+            ]]
         ]
     ];
 
@@ -106,6 +113,8 @@ function getFilteredOrders($filterField, $filterValue, $op)
 
     $response = curl_exec($ch);
     $responseArray = json_decode($response, true);
+
+    // return $response;
 
     if (curl_errno($ch)) {
         return ('Error: ' . curl_error($ch));
@@ -138,12 +147,14 @@ function getFilteredOrders($filterField, $filterValue, $op)
 
 
 
-function getOrdersByReference($referenceBy, $refrenceId)
+function getOrdersByStdId($stdId, $isHistory = 'false')
 {
     $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
     $projectId = 'cms-08-02-2024';
     $collection = 'orders';
     $url = "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents:runQuery?key=$apiKey";
+
+    $timestamp_12am = strtotime(date('Y/m/d') . ' 00:00:00');
 
     $queryParams = [
         "structuredQuery" => [
@@ -153,16 +164,41 @@ function getOrdersByReference($referenceBy, $refrenceId)
             ]],
 
             "where" => [
-                "fieldFilter" => [
-                    "field" => [
-                        "fieldPath" => $referenceBy . "Id"
-                    ],
-                    "op" => "EQUAL",
-                    "value" => [
-                        "stringValue" => "$refrenceId"
+                "compositeFilter" => [
+                    "op" => "AND",
+                    "filters" => [
+                        [
+                            "fieldFilter" => [
+                                "field" => [
+                                    "fieldPath" => "studentId"
+                                ],
+                                "op" => "EQUAL",
+                                "value" => [
+                                    "stringValue" => "$stdId"
+                                ]
+                            ]
+                        ],
+                        [
+                            "fieldFilter" => [
+                                "field" => [
+                                    "fieldPath" => "orderTime"
+                                ],
+                                "op" => ($isHistory == 'false' ? "GREATER_THAN_OR_EQUAL" : "LESS_THAN"),
+                                "value" => [
+                                    "stringValue" => (string) $timestamp_12am
+                                ]
+                            ]
+                        ]
                     ]
                 ]
-            ]
+            ],
+
+            "orderBy" => [[
+                "field" => [
+                    "fieldPath" => "orderTime"
+                ],
+                "direction" => "DESCENDING"
+            ]]
         ]
     ];
 
