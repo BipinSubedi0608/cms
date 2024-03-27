@@ -387,6 +387,13 @@ function updateUser($userId, $newUserData)
 
 function updatePassword($userId, $currentPassword, $newPassword)
 {
+    if ($currentPassword == $newPassword) {
+        return json_encode([
+            'status' => '402',
+            'message' => 'New Password Cannot Be The Same As Old Password',
+        ]);
+    }
+
     if ($currentPassword != getUserPassword($userId)) {
         return json_encode([
             'status' => '401',
@@ -396,10 +403,14 @@ function updatePassword($userId, $currentPassword, $newPassword)
 
     $idToken = getCurrentUserTokenFromSession();
     $firebaseResponse = json_decode(firebaseUpdatePassword($idToken, $newPassword), true);
+    // echo "<br>...........Firebase in user opt: " . json_encode($firebaseResponse) . "................<br>";
 
-    // if (!isset($firebaseResponse['idToken'])) {
-    //     return json_encode($firebaseResponse);
-    // }
+    if ($firebaseResponse["code"] != "200") {
+        return json_encode([
+            'status' => $firebaseResponse["code"],
+            'message' => $firebaseResponse["message"],
+        ]);
+    }
 
     $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
     $projectId = 'cms-08-02-2024';
@@ -460,7 +471,10 @@ function updatePassword($userId, $currentPassword, $newPassword)
     if ($response === false) {
         return "Error: " . curl_error($ch);
     } else {
-        return $firebaseResponse;
+        return json_encode([
+            'status' => '200',
+            'message' => 'Password Changed Successfully',
+        ]);
     }
 
     curl_close($ch);

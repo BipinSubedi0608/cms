@@ -1,3 +1,5 @@
+import { logoutCall } from "./login.js";
+
 export async function createNewUser(email, password) {
     return new Promise((resolve, reject) => {
         $.ajax({
@@ -90,8 +92,37 @@ export function updatePassword(oldPass, newPass) {
             console.log(response);
         },
         error: function (error) {
-            error = JSON.stringify(error)
-            console.log(error);
+            console.log("Error: " + error.responseText);
+            error = JSON.parse(error.responseText);
+
+            if (error.status == 200) {
+                Swal.fire({
+                    icon: 'success',
+                    title: `Password Changed Successfully`,
+                    text: "Please re-login with your new password",
+                    showConfirmButton: true,
+                    allowOutsideClick: true,
+                    timer: 2000,
+                    timerProgressBar: true,
+                }).then(() => {
+                    Swal.close();
+                    logoutCall();
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: `Error ${error.status}`,
+                    text: error.message,
+                    showConfirmButton: true,
+                    allowOutsideClick: true,
+                    timer: 3000,
+                    timerProgressBar: true,
+                }).then((value) => {
+                    if (value.isConfirmed) {
+                        Swal.close();
+                    }
+                });
+            }
         }
     });
 }

@@ -30,6 +30,38 @@ function checkSession()
     }
 }
 
+function refreshIdToken($refreshToken)
+{
+    $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
+    $url = "https://securetoken.googleapis.com/v1/token?key=$apiKey";
+
+    $requestData = json_encode([
+        'grant_type' => 'refresh_token',
+        'refresh_token' => $refreshToken,
+    ]);
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $requestData);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+    ]);
+
+    $response = curl_exec($ch);
+    $responseObj = json_decode($response, true);
+
+    if (curl_errno($ch)) {
+        echo 'cURL error: ' . curl_error($ch);
+    }
+
+    curl_close($ch);
+
+    $_SESSION["currentUser"]["idToken"] = $responseObj["id_token"];
+    $_SESSION["currentUser"]["refreshToken"] = $responseObj["refresh_token"];
+}
+
 function createSession($keyToStore, $dataToStore)
 {
     $_SESSION[$keyToStore] = $dataToStore;
@@ -54,6 +86,8 @@ function destroySession()
 function refreshSession()
 {
     if (isset($_SESSION['currentUser'])) {
+        $currentRefreshToken = $_SESSION['currentUser']['refreshToken'];
         $_SESSION['currentUser']['lastLoginTime'] = time();
+        refreshIdToken($currentRefreshToken);
     }
 }

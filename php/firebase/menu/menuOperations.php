@@ -249,7 +249,7 @@ function addMenu($foodName, $foodQuantity, $foodPrice, $imageURL)
         'quantity' =>  $responseObj['fields']['quantity']['stringValue'],
         'imgUrl' =>  $responseObj['fields']['imgUrl']['stringValue'],
         'lastUpdatedTime' =>  $responseObj['fields']['lastUpdatedTime']['stringValue'],
-        'isDeleted' =>  $responseObj['fields']['isDeleted']['stringValue'],      
+        'isDeleted' =>  $responseObj['fields']['isDeleted']['stringValue'],
     ];
 
     return json_encode($food);
@@ -264,7 +264,7 @@ function deleteMenu($foodId)
     $collection = 'menu';
     $url = "https://firestore.googleapis.com/v1/projects/{$projectId}/databases/(default)/documents/{$collection}/{$foodId}?key={$apiKey}";
 
-    $foodToBeDeleted = getFoodWithId($foodId);
+    $foodToBeDeleted = json_decode(getFoodWithId($foodId), true);
 
     $data = json_encode([
         "fields" => [

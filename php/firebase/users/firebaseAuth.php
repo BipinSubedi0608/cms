@@ -122,6 +122,7 @@ function firebaseUpdatePassword($idToken, $newPass)
     ]);
 
     $response = curl_exec($ch);
+    $responseObj = json_decode($response, true);
 
     if (curl_errno($ch)) {
         echo 'cURL error: ' . curl_error($ch);
@@ -129,7 +130,21 @@ function firebaseUpdatePassword($idToken, $newPass)
 
     curl_close($ch);
 
-    return json_encode($response);
+    if (isset($responseObj["error"])) {
+        return json_encode([
+            "code" => (string) $responseObj["error"]["code"],
+            "message" => $responseObj["error"]["message"],
+        ]);
+    }
+
+    refreshIdToken($responseObj["refreshToken"]);
+    return json_encode([
+        "code" => "200",
+        "localId" => $responseObj["localId"],
+        "email" => $responseObj["email"],
+        "idToken" => $responseObj["idToken"],
+        "refreshToken" => $responseObj["refreshToken"],
+    ]);
 }
 
 

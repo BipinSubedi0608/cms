@@ -71,7 +71,6 @@
   if ($loginStatus['isLoggedIn'] == 'true') {
     $isAdmin = checkAdmin(getCurrentUserIdFromSession());
     $lastPage = getCurrentPage();
-    // $lastPage = null;
     $defaultPage = (isset($lastPage)) ? $lastPage : (($isAdmin == 'true') ? 'orders' : 'home');
 
     refreshSession();

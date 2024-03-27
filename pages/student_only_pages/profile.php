@@ -45,7 +45,7 @@ $currentUser = json_decode(getUser($currentUserId), true);
     </div>
 </div>
 
-<script>
+<script type="module">
     import {
         updatePassword
     } from "../../assets/js/userOperations.js";

@@ -126,7 +126,7 @@ function cardComponent($foodData, $isAdmin)
             if (value.isConfirmed) {
                 deleteFood(selectedFoodId);
                 Swal.close();
-                location.reload(true);
+                // location.reload(true);
             }
         });
 

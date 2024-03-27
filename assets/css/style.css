@@ -146,9 +146,9 @@ body {
 
 .buyBtn:hover,
 .outOfStockBtn {
-  color: #ffffff;
-  border: 1px solid #ff2800;
-  background-color: #ff2800;
+  color: #ffffff !important;
+  border: 1px solid #ff2800 !important;
+  background-color: #ff2800 !important;
 }
 
 .editBtn {
