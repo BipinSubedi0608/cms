@@ -26,66 +26,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['operation'])) {
             echo updateUser($_POST['userId'], $_POST['userData']);
             break;
 
+        case 'getSearchedUsers':
+            echo getFilteredUser($_POST['toSearch'], $_POST['filterField']);
+            break;
+
         default:
             echo "Invalid User Operation";
             break;
     }
 }
-
-
-
-function getAllUsers()
-{
-    $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
-    $projectId = 'cms-08-02-2024';
-    $collection = 'users';
-    $url = "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents/$collection/?key=$apiKey";
-
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-    $response = curl_exec($ch);
-
-    // Check for cURL errors
-    if (curl_errno($ch)) {
-        echo 'Curl error: ' . curl_error($ch);
-    }
-
-    $responseObj = json_decode($response, true);
-
-    // Check if JSON decoding was successful
-    if ($responseObj === null) {
-        echo 'Error decoding JSON: ';
-    }
-
-    $userDataArray = array();
-
-    foreach ($responseObj['documents'] as $document) {
-        $name = $document['fields']['name']['stringValue'];
-        $isAdmin = $document['fields']['isAdmin']['stringValue'];
-        // Check if name is "admin", if so, continue to the next iteration
-        if ($isAdmin == "true") {
-            continue;
-        }
-        $grade = $document['fields']['grade']['stringValue'];
-        $student_id = $document['fields']['std_id']['stringValue'];
-        $faculty = $document['fields']['faculty']['stringValue'];
-        $section = $document['fields']['section']['stringValue'];
-
-        //push data to the array
-        $userDataArray[] = [
-            'name' => $name,
-            'student_id' => $student_id,
-            'grade' => $grade,
-            'faculty' => $faculty,
-            'section' => $section
-        ];
-    }
-    return json_encode($userDataArray);
-}
-
-
 
 function getUser($userId, $requirePassword = false)
 {
@@ -126,6 +75,77 @@ function getUser($userId, $requirePassword = false)
     }
 
     return json_encode($currentUser);
+}
+
+
+function sortedUserData($direction)
+{
+    $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
+    $projectId = 'cms-08-02-2024';
+    $collection = 'users';
+    $url = "https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents:runQuery?key=$apiKey";
+
+
+    $query = [
+        "structuredQuery" => [
+            "from" => [[
+                "collectionId" => $collection,
+                "allDescendants" => true
+            ]],
+
+            "orderBy" => [[
+                "field" => [
+                    "fieldPath" => "name"
+                ],
+                "direction" => "$direction"
+            ]]
+        ]
+    ];
+
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($query));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+    ]);
+
+    $response = curl_exec($ch);
+
+    $responseArray = json_decode($response, true);
+
+    if (curl_errno($ch)) {
+        return ('Error: ' . curl_error($ch));
+    }
+
+    curl_close($ch);
+
+    $sortedListOfUsers = []; // Initialize an empty array to store user data
+
+    if (count($responseArray) > 0 && isset($responseArray[0]['document'])) {
+        foreach ($responseArray as $document) {
+            $user = $document['document'];
+
+            // Skip adding user data if the name is "Admin"
+            if ($user['fields']['name']['stringValue'] == 'Admin') {
+                continue;
+            }
+
+            // Add user data to the $sortedListOfUsers array
+            $sortedListOfUsers[] = [
+                'name' => $user['fields']['name']['stringValue'],
+                'std_id' => $user['fields']['std_id']['stringValue'],
+                'faculty' => $user['fields']['faculty']['stringValue'],
+                'grade' => $user['fields']['grade']['stringValue'],
+                'section' => $user['fields']['section']['stringValue'],
+            ];
+        }
+    }
+
+    // Encode the array containing all user data into JSON format
+    return json_encode($sortedListOfUsers);
 }
 
 
@@ -189,7 +209,7 @@ function getUserIdFromClgId($clgId)
 
 
 
-function getFilteredUser($filterField, $filterValue, $requirePassword = false)
+function getFilteredUser($filterValue, $filterField, $requirePassword = false)
 {
     $apiKey = 'AIzaSyAqp8-BgKCujREJeC54XR5cduGvbcjtuVs';
     $projectId = 'cms-08-02-2024';
@@ -229,6 +249,7 @@ function getFilteredUser($filterField, $filterValue, $requirePassword = false)
     ]);
 
     $response = curl_exec($ch);
+
     $responseArray = json_decode($response, true);
 
     if (curl_errno($ch)) {
@@ -255,7 +276,6 @@ function getFilteredUser($filterField, $filterValue, $requirePassword = false)
                 'grade' => $user['fields']['grade']['stringValue'],
                 'isAdmin' => $user['fields']['isAdmin']['stringValue'],
                 'section' => $user['fields']['section']['stringValue'],
-
                 'general_info' => [
                     'dob' => $generalInfoTemp['dob']['stringValue'],
                     'gender' => $generalInfoTemp['gender']['stringValue'],
@@ -276,7 +296,11 @@ function getFilteredUser($filterField, $filterValue, $requirePassword = false)
         }
     }
 
-    return json_encode($listOfUsers);
+    if (count($listOfUsers) > 0) {
+        return json_encode($listOfUsers);
+    } else {
+        return "No user found";
+    }
 }
 
 
@@ -403,7 +427,6 @@ function updatePassword($userId, $currentPassword, $newPassword)
 
     $idToken = getCurrentUserTokenFromSession();
     $firebaseResponse = json_decode(firebaseUpdatePassword($idToken, $newPassword), true);
-    // echo "<br>...........Firebase in user opt: " . json_encode($firebaseResponse) . "................<br>";
 
     if ($firebaseResponse["code"] != "200") {
         return json_encode([
@@ -478,6 +501,7 @@ function updatePassword($userId, $currentPassword, $newPassword)
     }
 
     curl_close($ch);
+
 }
 
 
