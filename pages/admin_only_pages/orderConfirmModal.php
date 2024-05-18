@@ -93,5 +93,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') :
                 location.reload(true);
             });
         });
+
+        $('#orderConfirmModal').on('hidden.bs.modal', function(e) {
+            location.reload(true);
+        })
     });
 </script>

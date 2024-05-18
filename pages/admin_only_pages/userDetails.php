@@ -3,9 +3,9 @@ include_once '../../php/firebase/users/userOperations.php';
 
 $stdId = isset($_POST['stdId']) ? $_POST['stdId'] : "";
 $currentUserId = getUserIdFromClgId($stdId);
-echo "$currentUserId";
+// echo "$currentUserId";
 $currentUser = json_decode(getUser($currentUserId), true);
-echo $currentUser['name'];
+// echo $currentUser['name'];
 ?>
 
 <!-- Modal -->
@@ -121,13 +121,13 @@ echo $currentUser['name'];
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
       </div>
     </div>
   </div>
 </div>
 <script>
    $('#userDetails').on('hidden.bs.modal', function (e) {
-    Location.reload(true);
+    location.reload(true);
    });
 </script>
